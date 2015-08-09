@@ -1,0 +1,55 @@
+*{
+  font-family: Calibri Light;
+}
+
+h1 {
+  font-size: 72px;
+}
+
+body{
+  background-color: #DBE6EC;
+  padding: 30px;
+}
+
+.navbar-custom {
+  background-color: #FA6900;
+  opacity: 0.9;
+  border-bottom: 5px solid #F38630;
+}
+
+.navbar-brand {
+  color: white;
+  font-size: 30px;
+}
+
+.errormessage {
+  color: red;
+  font-size: 15px;
+}
+
+#central-options {
+  width: 520px;
+  margin: 0 auto;
+  padding-top: 30px;
+}
+
+
+.menu {
+  margin : 20px;
+}
+
+.option {
+  width : 240px;
+}
+
+.nav-button{
+  color:white;
+}
+
+.active {
+  background-color: #F38630;
+  color:white;
+}
+
+
+ul.nav a:hover { background-color: #DBE6EC !important; }

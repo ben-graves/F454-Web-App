@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <meta charset="UTF-8">
+    <title>Welcome to E-Flashcards</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="./styles/styles.css">
+  </head>
+  <body ng-controller="welcomeController">
+    <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class = "sr only">Toggle Navigation</span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+          </button>
+          <a class = "navbar-brand"  href = "#"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+        </div>
+      </div>
+    </div>
+    <div class = "container">
+      <main>
+        <header>
+          <div class ="page-header">
+            <h1>Welcome</h1>
+          </div>
+        </header>
+      </div>
+      <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <form name="SignInForm" class = "form-horizontal">
+                <h2>Sign In</h2>
+                <div class="form-group">
+                  <label class="control-label col-md-2"for="username">Username</label>
+                  <div class="col-md-5">
+                    <input type="text" name="username" ng-model="signindetails.username" id="username" class="form-control" placeholder="Enter username">
+                  </div>
+                  <div class="col-md-5 errormessage">
+                    <p>{{signinmessage.username}}</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-2" for="password">Password</label>
+                  <div class="col-md-5">
+                    <input type="password" name="password" ng-model="signindetails.password" id="password" class="form-control" placeholder="Enter password">
+                  </div>
+                  <div class="col-md-5 errormessage">
+                    <p>{{signinmessage.password}}</p>
+                  </div>
+                </div>
+                <div class="col-md-offset-5 col-md-7">
+                  <button  class="btn btn-primary" ng-click="signin(signindetails)">Sign In</button>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <form novalidate name="SignUpForm" class = "form-horizontal">
+                <h2>Sign Up</h2>
+                <div class="form-group">
+                  <label class="control-label col-md-3" for="email">Email Address</label>
+                  <div class="col-md-5">
+                    <input type="email" name="email" ng-model="signupdetails.email" id="email" class="form-control" placeholder="Enter email address">
+                  </div>
+                  <div class="col-md-4 errormessage">
+                    <p>{{signupmessage.email}}</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3" for="firstname">First Name</label>
+                  <div class="col-md-4">
+                    <input type="text" name="firstname" ng-model="signupdetails.firstname" id="firstname" class="form-control" placeholder="Enter first name">
+                  </div>
+                  <div class="col-md-3 errormessage">
+                    <p>{{signupmessage.firstname}}</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3" for="lastname">Last Name</label>
+                  <div class="col-md-4">
+                    <input type="text" name="lastname" ng-model="signupdetails.lastname" id="lastname" class="form-control" placeholder="Enter last name">
+                  </div>
+                  <div class="col-md-3 errormessage">
+                    <p>{{signupmessage.lastname}}</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3" for="dob">Date of Birth</label>
+                  <div class="col-md-4">
+                    <input type="date" name="dob" ng-model="signupdetails.dob" id="dob" class="form-control" placeholder="Enter date of birth">
+                  </div>
+                  <div class="col-md-3 errormessage">
+                    <p>{{signupmessage.dob}}</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3" for="username">Username</label>
+                  <div class="col-md-4">
+                    <input type="text" name="username" ng-model="signupdetails.username" id="username" class="form-control" placeholder="Enter desired username">
+                  </div>
+                  <div class="col-md-3 errormessage">
+                    <p>{{signupmessage.username}}</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3" for="fname">Password</label>
+                  <div class="col-md-6">
+                    <input type="password" name="password" ng-model="signupdetails.password" id="password" class="form-control" placeholder="Enter password">
+                  </div>
+                  <div class="col-md-3 errormessage">
+                    <p>{{signupmessage.password}}</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3" for="retypepassword">Retype Password</label>
+                  <div class="col-md-6">
+                    <input type="password" name="retypepassword" ng-model="signupdetails.retypepassword" id="password" class="form-control" placeholder="Enter password again">
+                  </div>
+                  <div class="col-md-3 errormessage">
+                    <p>{{signupmessage.retypepassword}}</p>
+                  </div>
+                </div>
+                <div class="col-md-offset-7 col-md-5">
+                  <button class="btn btn-primary" ng-click="signup(signupdetails)">Sign Up</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="./node_modules/angular/angular.js"></script>
+    <script src="scripts/welcome.js"></script>
+  </body>
+</html>
