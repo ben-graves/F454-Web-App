@@ -1,6 +1,6 @@
 angular.module("app", []);
 
-angular.module("app").controller("welcomeController", function($scope) {
+angular.module("app").controller("welcomeController", function($scope, $http) {
 
   $scope.signupmessage = {
                         email : "",
@@ -105,7 +105,8 @@ angular.module("app").controller("welcomeController", function($scope) {
   $scope.signup = function(signupdetails) {
     if (validatesignup(signupdetails)){
       console.log("valid")
-      /*call api with /createuser*/
+      var url = "http://localhost:8080/createuser/firstname="+signupdetails.firstname+"/lastname="+signupdetails.lastname+"/dob=1997-12-27/emailaddress="+signupdetails.emailaddress+"/username="+signupdetails.username+"/password="+signupdetails.password+"/"
+      $http.get(url)
 
 
   };
