@@ -22,6 +22,10 @@ body{
   font-size: 30px;
 }
 
+.navbar-brand:hover {
+  color: black;
+}
+
 .errormessage {
   color: red;
   font-size: 15px;
@@ -51,5 +55,16 @@ body{
   color:white;
 }
 
+a {
+  color : black;
+}
 
-ul.nav a:hover { background-color: #DBE6EC !important; }
+a:hover {
+  color : #F38630;
+}
+
+
+
+ul.nav a:hover { background-color: #DBE6EC;
+                  color: black;S
+}
