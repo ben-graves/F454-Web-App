@@ -109,11 +109,11 @@ angular.module("app").controller("welcomeController", function($scope, $http) {
       .then(function(response) {
         console.log(response)
         if (response.data === "Success") {
-          window.navigate('/startpage')
+          document.cookie="username="+signupdetails.username;
+          window.open('/startpage',"_self")
         }
         else if (response.data === "Username Taken") {
           $scope.signupmessage.username = "Username Taken"
-
         }
       });
   };
@@ -121,4 +121,59 @@ angular.module("app").controller("welcomeController", function($scope, $http) {
     return "no"
   }
   };
+});
+
+angular.module("app").controller("startController", function($scope) {
+});
+
+angular.module("app").controller("newsetController", function($scope) {
+  $scope.subjects = [
+    "Computing",
+    "Maths",
+    "Physics",
+    "Spanish"
+  ];
+});
+
+angular.module("app").controller("setController", function($scope) {
+  $scope.set = {title : "Chapter 1",
+                subject : "Computing"};
+  $scope.flashcards = [
+   {front:"to play", back:"jugar", learnt : "yes"},
+    {front:"to swim", back:"nadar", learnt : "no"},
+    {front:"to paint", back:"pintar", learnt : "yes"},
+{front:"to watch", back:"mirar", learnt : "yes"},
+{front:"to please", back:"gustar", learnt : "yes"},
+{front:"to attack", back:"atacar", learnt : "yes"},
+{front:"to take", back: "sacar", learnt : "yes"},
+{front:"to pray", back:"rezar", learnt : "yes"},
+{front:"to get up", back:"levantar", learnt : "yes"},
+{front:"to go for a walk", back:"pasear", learnt : "yes"},
+{front:"to move", back:"mudar", learnt : "yes"},
+{front:"to fix/repair/straighten up", back:"arreglar", learnt : "yes"},
+{front:"to return/go back", back:"regresar", learnt : "yes"},
+{front:"to turn in", back:"entregar", learnt : "yes"},
+{front:"to enter", back:"entrar", learnt : "yes"},
+{front:"to cease/end", back:"cesar", learnt : "yes"},
+{front:"to play", back:"jugar", learnt : "yes"},
+ {front:"to swim", back:"nadar", learnt : "no"},
+ {front:"to paint", back:"pintar", learnt : "yes"},
+{front:"to watch", back:"mirar", learnt : "yes"},
+{front:"to please", back:"gustar", learnt : "yes"},
+{front:"to attack", back:"atacar", learnt : "yes"},
+{front:"to take", back: "sacar", learnt : "yes"},
+{front:"to pray", back:"rezar", learnt : "yes"},
+{front:"to get up", back:"levantar", learnt : "yes"},
+{front:"to go for a walk", back:"pasear", learnt : "yes"},
+{front:"to move", back:"mudar", learnt : "yes"},
+{front:"to fix/repair/straighten up", back:"arreglar", learnt : "yes"},
+{front:"to return/go back", back:"regresar", learnt : "yes"},
+{front:"to turn in", back:"entregar", learnt : "yes"},
+{front:"to enter", back:"entrar", learnt : "yes"},
+{front:"to cease/end", back:"cesar", learnt : "yes"}
+
+
+
+
+ ];
 });

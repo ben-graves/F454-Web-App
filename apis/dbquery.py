@@ -13,9 +13,13 @@ def createuser(firstname, lastname, dob, emailaddress, username, password):
              "(FirstName, LastName, DoB, EmailAddress, Username, Password)"
              "VALUES (%s, %s, %s, %s, %s, %s)")
     user_data = (firstname, lastname, dob, emailaddress, username, password)
-    cursor.execute(query, user_data)
-    cnx.commit()
-    return "Success"
+    try:
+        cursor.execute(query, user_data)
+        cnx.commit()
+        message = "Success"
+    except mysql.connector.errors.IntegrityError:
+        message = "Username Taken"
+    return message
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=5000)

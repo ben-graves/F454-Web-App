@@ -6,6 +6,17 @@ h1 {
   font-size: 72px;
 }
 
+table{
+  background-color: white;
+  font-size: 24px;
+}
+
+#subjectimg{
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 10px;
+}
+
 body{
   background-color: #DBE6EC;
   padding: 30px;
@@ -13,7 +24,7 @@ body{
 
 .navbar-custom {
   background-color: #FA6900;
-  opacity: 0.9;
+  opacity: 0.8;
   border-bottom: 5px solid #F38630;
 }
 
@@ -24,6 +35,11 @@ body{
 
 .navbar-brand:hover {
   color: black;
+}
+
+h2 {
+  padding:10px;
+  font-size: 40px
 }
 
 .errormessage {
@@ -38,6 +54,14 @@ body{
 }
 
 
+.central-form {
+  width: 1000px;
+  margin: 0 auto;
+  padding-top: 30px;
+  background-color: green;
+}
+
+
 .menu {
   margin : 20px;
 }
@@ -48,6 +72,19 @@ body{
 
 .nav-button{
   color:white;
+
+
+}
+
+.badge{
+  background-color: white;
+  color: #FA6900;
+  font-size: 15px;
+}
+
+.badge:hover{
+  background-color: black;
+  color: #DBE6EC;
 }
 
 .active {
@@ -64,7 +101,18 @@ a:hover {
 }
 
 
-
 ul.nav a:hover { background-color: #DBE6EC;
-                  color: black;S
+                  color: black;
+}
+
+label{
+  font-size: 15px;
+}
+
+#newsetform{
+  background-color: white;
+  padding-left: 30px;
+  padding-bottom: 30px;
+  padding-right: 30px;
+  border: 5px solid grey;
 }
