@@ -33,9 +33,13 @@ angular.module("app").controller("welcomeController", function($scope, $http) {
       if (signupdetails.email === undefined) {
         valid = false;
         $scope.signupmessage.email = "Invalid email address"
+        angular.element(document.querySelector('[id="emailbox"]')).addClass('has-error');
+        angular.element(document.querySelector('[id="emailicon"]')).addClass('glyphicon glyphicon-remove form-control-feedback');
       }
       else{
         $scope.signupmessage.email = ""
+        angular.element(document.querySelector('[id="emailbox"]')).addClass('has-success');
+        angular.element(document.querySelector('[id="emailicon"]')).addClass('glyphicon glyphicon-ok form-control-feedback');
       }
       if (signupdetails.firstname === undefined) {
         valid = false;
@@ -124,6 +128,7 @@ angular.module("app").controller("welcomeController", function($scope, $http) {
 });
 
 angular.module("app").controller("startController", function($scope) {
+  $scope.username = document.cookie;
 });
 
 angular.module("app").controller("newsetController", function($scope) {
@@ -171,9 +176,33 @@ angular.module("app").controller("setController", function($scope) {
 {front:"to turn in", back:"entregar", learnt : "yes"},
 {front:"to enter", back:"entrar", learnt : "yes"},
 {front:"to cease/end", back:"cesar", learnt : "yes"}
-
-
-
-
  ];
+});
+
+angular.module("app").controller("subjectsController", function($scope, $http) {
+  $scope.subjects = [
+    {name : "Computing", image : "images/subjects/Computing.png", learnt : 243, total : 457},
+    {name : "Maths", image : "images/subjects/Maths.png", learnt : 33, total : 42},
+    {name : "Physics", image : "images/subjects/Physics.png", learnt : 102, total : 287},
+    {name : "Spanish", image : "images/subjects/Languages.png", learnt : 357, total : 1133},
+    {name : "General Studies", image : "images/subjects/Other.png", learnt : 0, total : 56},
+    {name : "English", image : "images/subjects/English.png", learnt : 53, total : 457},
+    {name : "Biology", image : "images/subjects/Biology.png", learnt : 265, total : 301},
+    {name : "Chemistry", image : "images/subjects/Chemistry.png", learnt : 323, total : 503},
+    {name : "Geography", image : "images/subjects/Other.png", learnt : 23, total : 453},
+    {name : "History", image : "images/subjects/History.png", learnt : 355, total : 376}
+  ];
+
+  $scope.overall = {
+    learnt : 0, total : 0
+  };
+
+  var subjectAmount = $scope.subjects.length;
+
+  for (i = 0; i < subjectAmount; i++){
+    $scope.subjects[i].percentage = Math.floor(($scope.subjects[i].learnt/$scope.subjects[i].total)*100)
+    $scope.overall.learnt += $scope.subjects[i].learnt;
+    $scope.overall.total += $scope.subjects[i].total;
+  }
+  $scope.overall.percentage = Math.floor(($scope.overall.learnt/$scope.overall.total)*100)
 });

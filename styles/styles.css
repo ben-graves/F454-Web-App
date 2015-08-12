@@ -116,3 +116,36 @@ label{
   padding-right: 30px;
   border: 5px solid grey;
 }
+
+#flashcard {
+  /*background-image: url("http://www.flippity.net/images/Flashcard-BG-Side1.gif");
+  /*background-size: 100% 100%;
+  background-color: #DBE6EC;
+  background-repeat: repeat-y;*/
+  font-size: 25px;
+  /*text-align: center;
+  /*vertical-align: middle;*/
+
+}
+
+.btn-custom {
+  background-color: white;
+  border: 1px solid lightgrey;
+}
+
+#topbutton{
+  margin-top: 42px;
+}
+.magicbuttons{
+  margin:12px;
+}
+
+#newbutton{
+  margin:auto;
+}
+
+.not-there{
+  background-color: transparent;
+  border : 0px;
+  box-shadow : none;
+}

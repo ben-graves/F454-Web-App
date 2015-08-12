@@ -60,10 +60,14 @@
             <div class="col-md-6">
               <form novalidate name="SignUpForm" class = "form-horizontal">
                 <h2>Sign Up</h2>
-                <div class="form-group">
+                <div id = "emailbox" class="form-group has-feedback">
                   <label class="control-label col-md-3" for="email">Email Address</label>
                   <div class="col-md-5">
                     <input type="email" name="email" ng-model="signupdetails.email" id="email" class="form-control" placeholder="Enter email address">
+                    <span id = "emailicon" aria-hidden="true"></span>
+                    <span id="inputError2Status" class="sr-only">(error)</span>
+                    <span id="inputSuccess2Status" class="sr-only">(success)</span>
+
                   </div>
                   <div class="col-md-4 errormessage">
                     <p>{{signupmessage.email}}</p>
