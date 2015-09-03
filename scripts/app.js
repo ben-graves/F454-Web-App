@@ -206,3 +206,40 @@ angular.module("app").controller("subjectsController", function($scope, $http) {
   }
   $scope.overall.percentage = Math.floor(($scope.overall.learnt/$scope.overall.total)*100)
 });
+
+angular.module("app").controller("newsubjectController", function($scope) {
+
+});
+
+angular.module('app').controller('imagesController', function ($scope) {
+  $scope.subjectimages = [
+    "images/subjects/Other.png",
+    "images/subjects/Biology.png",
+    "images/subjects/Chemistry.png",
+    "images/subjects/Physics.png",
+    "images/subjects/Computing.png",
+    "images/subjects/Maths.png",
+    "images/subjects/Economics.png",
+    "images/subjects/English.png",
+    "images/subjects/Literature.png",
+    "images/subjects/History.png",
+    "images/subjects/Geography.png",
+    "images/subjects/World Studies.png",
+    "images/subjects/Languages.png",
+    "images/subjects/Art.png",
+    "images/subjects/Astronomy.png",
+    "images/subjects/Mechanics.png",
+    "images/subjects/Nature.png",
+    "images/subjects/Navigation.png",
+    "images/subjects/Photography.png",
+    "images/subjects/Psychology.png",
+    "images/subjects/RE.png",
+    "images/subjects/Sport.png",
+    "images/subjects/Statistics.png",
+    "images/subjects/Veterinary.png",
+
+
+
+
+  ];
+});

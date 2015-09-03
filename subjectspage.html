@@ -55,30 +55,34 @@
         </div>
       </div>
       <div class="row">
-        <div ng-repeat="subject in subjects" class=" col-xs-6 col-sm-4 col-md-3 col-lg-3">
+        <div ng-repeat="subject in subjects" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
           <div class="thumbnail">
-            <img id="subjectimg" src={{subject.image}} alt="/images/subjects/Other.png" width=200px>
-            <div class="caption">
-              <h3>{{subject.name}}<br>
-                <small>{{subject.learnt}}/{{subject.total}} Cards Learnt</small>
-              </h3>
+            <a href="/setpage">
+              <img id="subjectimg" src={{subject.image}} alt="/images/subjects/Other.png" width=200px>
+              <div class="caption">
+                <h3>{{subject.name}}<br>
+                  <small>{{subject.learnt}}/{{subject.total}} Cards Learnt</small>
+                </h3>
                 <div class="progress">
                   <div class="progress-bar progress-bar-success" style="width: {{subject.percentage}}%; min-width: 2em;">
                     {{subject.percentage}}%
                   </div>
-                  <!--
-                  <div class="progress-bar progress-bar-danger" style="width: 25%">
-                    25%
-                  </div>
-                -->
+                    <!--
+                    <div class="progress-bar progress-bar-danger" style="width: 25%">
+                      25%
+                    </div>
+                  -->
                 </div>
-            </div>
+              </div>
+            </a>
           </div>
         </div>
-        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3" >
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" >
           <div class="thumbnail not-there">
-            <img id="subjectimg" src="images/add.png" width=200px>
-            <h3 class = "text-center">New Subject</h3>
+            <a href="/newsubject">
+              <img id="subjectimg" src="images/add.png" width=200px>
+              <h3 class = "text-center">New Subject</h3>
+            </newsubject>
           </div>
         </div>
       </div>
