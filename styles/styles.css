@@ -166,9 +166,10 @@ img {
   transition: all 0.3s ease 0s;
 
 }
-img:hover {
+/*img:hover {
   transform: scale(1.1);
-}
+}*/
+
 .not-there{
   background-color: transparent;
   border : 0px;
