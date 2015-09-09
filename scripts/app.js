@@ -144,39 +144,49 @@ angular.module("app").controller("setController", function($scope) {
   $scope.set = {title : "Chapter 1",
                 subject : "Computing"};
   $scope.flashcards = [
-   {front:"to play", back:"jugar", learnt : "yes"},
-    {front:"to swim", back:"nadar", learnt : "no"},
-    {front:"to paint", back:"pintar", learnt : "yes"},
-{front:"to watch", back:"mirar", learnt : "yes"},
-{front:"to please", back:"gustar", learnt : "yes"},
-{front:"to attack", back:"atacar", learnt : "yes"},
-{front:"to take", back: "sacar", learnt : "yes"},
-{front:"to pray", back:"rezar", learnt : "yes"},
-{front:"to get up", back:"levantar", learnt : "yes"},
-{front:"to go for a walk", back:"pasear", learnt : "yes"},
-{front:"to move", back:"mudar", learnt : "yes"},
-{front:"to fix/repair/straighten up", back:"arreglar", learnt : "yes"},
-{front:"to return/go back", back:"regresar", learnt : "yes"},
-{front:"to turn in", back:"entregar", learnt : "yes"},
-{front:"to enter", back:"entrar", learnt : "yes"},
-{front:"to cease/end", back:"cesar", learnt : "yes"},
-{front:"to play", back:"jugar", learnt : "yes"},
- {front:"to swim", back:"nadar", learnt : "no"},
- {front:"to paint", back:"pintar", learnt : "yes"},
-{front:"to watch", back:"mirar", learnt : "yes"},
-{front:"to please", back:"gustar", learnt : "yes"},
-{front:"to attack", back:"atacar", learnt : "yes"},
-{front:"to take", back: "sacar", learnt : "yes"},
-{front:"to pray", back:"rezar", learnt : "yes"},
-{front:"to get up", back:"levantar", learnt : "yes"},
-{front:"to go for a walk", back:"pasear", learnt : "yes"},
-{front:"to move", back:"mudar", learnt : "yes"},
-{front:"to fix/repair/straighten up", back:"arreglar", learnt : "yes"},
-{front:"to return/go back", back:"regresar", learnt : "yes"},
-{front:"to turn in", back:"entregar", learnt : "yes"},
-{front:"to enter", back:"entrar", learnt : "yes"},
-{front:"to cease/end", back:"cesar", learnt : "yes"}
+   {front:"to play", back:"jugar", learnt : "true"},
+    {front:"to swim", back:"nadar", learnt : "false"},
+    {front:"to paint", back:"pintar", learnt : "true"},
+{front:"to watch", back:"mirar", learnt : "true"},
+{front:"to please", back:"gustar", learnt : "true"},
+{front:"to attack", back:"atacar", learnt : "false"},
+{front:"to take", back: "sacar", learnt : "true"},
+{front:"to pray", back:"rezar", learnt : "false"},
+{front:"to get up", back:"levantar", learnt : "false"},
+{front:"to go for a walk", back:"pasear", learnt : "true"},
+{front:"to move", back:"mudar", learnt : "true"},
+{front:"to fix/repair/straighten up", back:"arreglar", learnt : "false"},
+{front:"to return/go back", back:"regresar", learnt : "true"},
+{front:"to turn in", back:"entregar", learnt : "true"},
+{front:"to enter", back:"entrar", learnt : "true"},
+{front:"to cease/end", back:"cesar", learnt : "false"},
+{front:"to play", back:"jugar", learnt : "true"},
+ {front:"to swim", back:"nadar", learnt : "false"},
+ {front:"to paint", back:"pintar", learnt : "true"},
+{front:"to watch", back:"mirar", learnt : "true"},
+{front:"to please", back:"gustar", learnt : "false"},
+{front:"to attack", back:"atacar", learnt : "false"},
+{front:"to take", back: "sacar", learnt : "false"},
+{front:"to pray", back:"rezar", learnt : "true"},
+{front:"to get up", back:"levantar", learnt : "true"},
+{front:"to go for a walk", back:"pasear", learnt : "true"},
+{front:"to move", back:"mudar", learnt : "true"},
+{front:"to fix/repair/straighten up", back:"arreglar", learnt : "false"},
+{front:"to return/go back", back:"regresar", learnt : "true"},
+{front:"to turn in", back:"entregar", learnt : "false"},
+{front:"to enter", back:"entrar", learnt : "true"},
+{front:"to cease/end", back:"cesar", learnt : "true"}
  ];
+ for (i in $scope.flashcards){
+   console.log($scope.flashcards[i].learnt)
+   if ($scope.flashcards[i].learnt === "true"){
+     $scope.flashcards[i].icon = "glyphicon glyphicon-ok icon-success"
+     $scope.flashcards[i].bg = "success"
+   } else {
+     $scope.flashcards[i].icon = "glyphicon glyphicon-remove icon-danger"
+     $scope.flashcards[i].bg = "danger"
+   }
+ }
 });
 
 angular.module("app").controller("subjectsController", function($scope, $http) {

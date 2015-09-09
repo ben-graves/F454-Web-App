@@ -42,45 +42,58 @@
   <div class = "container">
     <main>
       <header>
-        <div class ="page-header">
+        <div class ="page-header col-sm-8">
           <h1>{{set.title}} <small>{{set.subject}}</small></h1>
+        </div>
+        <div class="col-sm-4">
+          <br><br><br>
+          <h3>Exam Date : 12/06/15</h3>
+            <h4>3 days left</h4>
+              <div class="btn-group" role="group">
+                <button ng-click="toggleComplete(item)" class="btn btn-success">
+                  <span class="glyphicon glyphicon-education" aria-hidden="true"> Learn</span>
+                  <span class="sr-only">Complete</span>
+                </button>
+                <button ng-click="updateItem(item)" class="btn btn-warning">
+                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"> Edit</span>
+                  <span class="sr-only">Edit</span>
+                </button>
+                <button ng-click="removeItem(item)" class="btn btn-danger">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"> Remove</span>
+                  <span class="sr-only">Remove</span>
+                </button>
+              </div>
         </div>
       </header>
     </div>
     <div class="container">
-      <div class="col-sm-9">
+      <div class="col-sm-12">
         <h3>Progress - Grade : B</h3>
         <div class="progress">
           <div class="progress-bar progress-bar-success" style="width: 75%">
             75% Learnt
           </div>
-          <div class="progress-bar progress-bar-danger" style="width: 25%">
-            25% Not learnt
-          </div>
         </div>
-      </div>
-      <div class="col-sm-3">
-        <h3>Exam Date : 12/06/15</h2>
-          <h>3 days left</h4>
       </div>
       <table class="table">
         <thead>
           <tr>
-            <th class="col-md-1">Number</th>
-            <th class="col-md-5">Front</th>
-            <th class="col-md-5">Back</th>
-            <th class="col-md-1">Learnt?</th>
+            <th class="col-xs-1">Number</th>
+            <th class="col-xs-5">Front</th>
+            <th class="col-xs-5">Back</th>
+            <th class="col-xs-1">Learnt?</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="flashcard in flashcards">
+          <tr class={{flashcard.bg}} ng-repeat="flashcard in flashcards">
             <td>{{$index+1}}</td>
             <td>{{flashcard.front}}</td>
             <td>{{flashcard.back}}</td>
-            <td>{{flashcard.learnt}}</td>
+            <td><span class={{flashcard.icon}} aria-hidden="true"></span></td>
           </tr>
         </tbody>
-
+      </table>
+    </div>
 </div>
 
 <script src="./node_modules/angular/angular.js"></script>

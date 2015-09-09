@@ -7,9 +7,21 @@ h1 {
   font-size: 72px;
 }
 
-table{
+#white {
   background-color: white;
+
+}
+
+table{
   font-size: 24px;
+}
+
+.icon-success {
+    color: #5CB85C;
+}
+
+.icon-danger {
+    color: red;
 }
 
 #subjectimg{
