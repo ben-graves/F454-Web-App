@@ -1,39 +1,31 @@
-var app = angular.module("app", []);
+var app = angular.module("app", ['ngRoute']);
 
-app.factory('shareData', function() {
-  var savedData
-  function set(data) {
-    savedData = data;
-  }
-
-  function get() {
-    console.log(savedData)
-    return savedData;
-  }
-
-  return {
-    set: set,
-    get: get
-  }
-});
-
-angular.module("app").controller("setsController", function($scope, shareData, $http) {
-  $scope.selectedSubject = shareData.get();
-});
-
-angular.module("app").controller("editsetController", function($scope, shareData, $http) {
+app.config(function($routeProvider) {
+  $routeProvider
+  .when('/setspage/:subject',{templateUrl: "setspage.html", controller: "setsController"}),
+  otherwise({redirectoTo:'/'})
+    });
 
 });
 
-angular.module("app").controller("manualtestingController", function($scope, shareData, $http) {
+angular.module("app").controller("setsController", function($scope, $routeParams, $http) {
+    console.log($routeParams.subject)
 
 });
 
-angular.module("app").controller("startController", function($scope, shareData, $http) {
+angular.module("app").controller("editsetController", function($scope, $http) {
 
 });
 
-angular.module("app").controller("welcomeController", function($scope, shareData, $http) {
+angular.module("app").controller("manualtestingController", function($scope, $http) {
+
+});
+
+angular.module("app").controller("startController", function($scope, $http) {
+
+});
+
+angular.module("app").controller("welcomeController", function($scope, $http) {
 
   $scope.signupmessage = {
                         email : "",
@@ -142,7 +134,7 @@ angular.module("app").controller("welcomeController", function($scope, shareData
   $scope.signup = function(signupdetails) {
     if (validatesignup(signupdetails)){
       var url = "http://localhost:5000/createuser/firstname="+signupdetails.firstname+"/lastname="+signupdetails.lastname+"/dob=1997-12-27/emailaddress="+signupdetails.email+"/username="+signupdetails.username+"/password="+signupdetails.password+"/"
-      $http.get(url)
+     $http.get(url)
       .then(function(response) {
         if (response.data === "Success") {
           document.cookie="username="+signupdetails.username;
@@ -160,7 +152,7 @@ angular.module("app").controller("welcomeController", function($scope, shareData
 
 });
 
-angular.module("app").controller("newsetController", function($scope, shareData, $http) {
+angular.module("app").controller("newsetController", function($scope, $http) {
 
   $scope.subjects = [
     "Computing",
@@ -218,7 +210,7 @@ angular.module("app").controller("setController", function($scope, $http) {
  }
 });
 
-angular.module("app").controller("subjectsController", function($scope,  $http) {
+angular.module("app").controller("subjectsController", function($scope, $http) {
   $scope.subjects = [
     {id: "1", name : "Computing", image : "images/subjects/Computing.png", learnt : 243, total : 457},
     {id: "2", name : "Maths", image : "images/subjects/Maths.png", learnt : 33, total : 42},
@@ -253,7 +245,7 @@ $scope.selectedSubject="No subject selected"
   $scope.overall.percentage = Math.floor(($scope.overall.learnt/$scope.overall.total)*100)
 });
 
-angular.module("app").controller("newsubjectController", function($scope, shareData, $http) {
+angular.module("app").controller("newsubjectController", function($scope, $http) {
   $scope.subjectimages = [
     "images/subjects/Other.png",
     "images/subjects/Biology.png",
