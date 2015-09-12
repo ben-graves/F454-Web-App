@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+  <meta charset="UTF-8">
+  <title>E-Flashcards - Start</title>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="./styles/styles.css">
+</head>
+<body ng-controller="subjectsController">
+  <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class = "sr only">Toggle Navigation</span>
+          <span class = "icon-bar"></span>
+          <span class = "icon-bar"></span>
+          <span class = "icon-bar"></span>
+        </button>
+        <a class = "navbar-brand"  href = "#"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      </div>
+      <div class = "navbar-collapse collapse">
+        <ul class = "nav navbar-nav navbar-right">
+          <li ><a  class="nav-button" href="/start">Start</a></li>
+          <!--DOESN'T WORK - NEEDS JQUERY?
+          <li class = "dropdown">
+            <a href = "#" class = "dropdown-toggles nav-button" data-toggle="dropdown">New <b class = "caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class = "dropdown-header">Create New</li>
+              <li><a href="#">Subject</a></li>
+              <li><a href="#">Set</a></li>
+            </ul>
+          </li>
+          -->
+          <li ><a class="nav-button" href="/newset">New Set</a></li>
+          <li><a class="nav-button" href="/subjects">Subjects  <span class="badge nav-button">4</span></a></li>
+          <li class="active"><a class="active" href="/sets">Sets  <span class="badge nav-button">23</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class = "container">
+
+    <main>
+      <header>
+        <div class ="page-header">
+          <h1>Your Subjects</h1>
+        </div>
+      </header>
+    </div>
+    <div class="container">
+      <h3>Overall <small>{{overall.learnt}}/{{overall.total}} Cards Learnt</small></h3>
+      <div class="progress">
+        <div class="progress-bar progress-bar-success" style="width: {{overall.percentage}}%">
+          {{overall.percentage}}%
+        </div>
+      </div>
+      <div class="row">
+        <div ng-repeat="subject in subjects" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="thumbnail" ng-click="selectSubject(subject.id)">
+            <!--<a href="/setspage">-->
+              <img id="subjectimg" src={{subject.image}} alt="/images/subjects/Other.png" width=200px>
+              <div class="caption">
+                <h3>{{subject.name}}<br>
+                  <small>{{subject.learnt}}/{{subject.total}} Cards Learnt</small>
+                </h3>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-success" style="width: {{subject.percentage}}%; min-width: 2em;">
+                    {{subject.percentage}}%
+                  </div>
+                    <!--
+                    <div class="progress-bar progress-bar-danger" style="width: 25%">
+                      25%
+                    </div>
+                  -->
+                </div>
+              </div>
+            <!--</a>-->
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" >
+          <div class="thumbnail not-there">
+            <a href="/newsubject">
+              <img id="subjectimg" src="images/add.png" width=200px>
+              <h3 class = "text-center">New Subject</h3>
+            </newsubject>
+          </div>
+        </div>
+      </div>
+    </div>
+      <script src="./node_modules/angular/angular.js"></script>
+      <script src="./node_modules/angular/angular-route.js"></script>
+      <script src="scripts/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+  <meta charset="UTF-8">
+  <title>E-Flashcards - Start</title>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="./styles/styles.css">
+</head>
+<body ng-controller="newsetController">
+  <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class = "sr only">Toggle Navigation</span>
+          <span class = "icon-bar"></span>
+          <span class = "icon-bar"></span>
+          <span class = "icon-bar"></span>
+        </button>
+        <a class = "navbar-brand"  href = "#"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      </div>
+      <div class = "navbar-collapse collapse">
+        <ul class = "nav navbar-nav navbar-right">
+          <li ><a  class="nav-button" href="/start">Start</a></li>
+          <!--DOESN'T WORK - NEEDS JQUERY?
+          <li class = "dropdown">
+            <a href = "#" class = "dropdown-toggles nav-button" data-toggle="dropdown">New <b class = "caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class = "dropdown-header">Create New</li>
+              <li><a href="#">Subject</a></li>
+              <li><a href="#">Set</a></li>
+            </ul>
+          </li>
+          -->
+          <li class = "active"><a class="active" href="/newset">New Set</a></li>
+          <li><a class="nav-button" href="/subjects">Subjects  <span class="badge nav-button">4</span></a></li>
+          <li><a class="nav-button" href="/sets">Sets  <span class="badge nav-button">23</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class = "container">
+    <main>
+      <header>
+        <div class ="page-header">
+          <h1>Create New Set</h1>
+        </div>
+      </header>
+    </div>
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-offset-3 col-sm-9">
+            <form name="NewSetForm" class = "form-horizontal" >
+              <div class="col-sm-offset-2 col-sm10s">
+                <h2>Set Details</h2>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2"for="settitle">Title</label>
+                <div class="col-sm-6">
+                  <input type="text" name="settitle" ng-model="setdetails.title" id="title" class="form-control" placeholder="Enter set title">
+                </div>
+                <div class="col-sm-5 errormessage">
+                  <!--<p>{{errormessage.title}}</p>-->
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2"for="subject">Subject</label>
+                <div class="col-sm-3">
+                  <select class="form-control" id="subject" ng-model="setdetails.subject">
+                    <option ng-repeat="subject in subjects">{{subject}}</option>
+                  </select>
+              </div>
+              <div class="col-sm-5 errormessage">
+                <!--<p>{{errormessage.subject}}</p>-->
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="exasmate">Exam Date</label>
+              <div class="col-sm-3">
+                <!--Needs jquery?-->
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker1').datetimepicker();
+                    });
+                </script>
+            </div>
+              </div>
+              <div class="col-sm-5 errormessage">
+                <!--<p>{{errormessage.exasmate}}</p>-->
+              </div>
+            </div>
+            <div class="col-sm-offset-8 col-sm-1">
+              <button align = "right" class="btn btn-primary" ng-click="signup(signupdetails)">Add Cards</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="./node_modules/angular/angular.js"></script>
+      <script src="scripts/app.js"></script>
+  </body>
+</html>

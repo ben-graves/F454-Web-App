@@ -1,0 +1,222 @@
+*{
+  font-family: Calibri Light;
+  transition: all 0.3s ease 0s;
+}
+
+h1 {
+  font-size: 72px;
+}
+
+#white {
+  background-color: white;
+
+}
+
+table{
+  font-size: 24px;
+}
+
+.icon-success {
+    color: #5CB85C;
+}
+
+.icon-danger {
+    color: red;
+}
+
+#subjectimg{
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 10px;
+}
+
+body{
+  background-color: #DBE6EC;
+  padding: 30px;
+}
+
+.navbar-custom {
+  background-color: #FA6900;
+  opacity: 0.8;
+  border-bottom: 5px solid #F38630;
+}
+
+.navbar-brand {
+  color: white;
+  font-size: 30px;
+}
+
+.navbar-brand:hover {
+  color: black;
+}
+
+h2 {
+  padding:10px;
+  font-size: 40px
+}
+
+.errormessage {
+  color: red;
+  font-size: 15px;
+}
+
+#central-options {
+  width: 520px;
+  margin: 0 auto;
+  padding-top: 30px;
+}
+
+
+.central-form {
+  width: 1000px;
+  margin: 0 auto;
+  padding-top: 30px;
+  background-color: green;
+}
+
+
+.menu {
+  margin : 20px;
+}
+
+.option {
+  width : 240px;
+}
+
+.nav-button{
+  color:white;
+
+
+}
+
+.badge{
+  background-color: white;
+  color: #FA6900;
+  font-size: 15px;
+}
+
+.badge:hover{
+  background-color: black;
+  color: #DBE6EC;
+}
+
+.active {
+  background-color: #F38630;
+  color:white;
+}
+
+a {
+  color : black;
+}
+
+a:hover {
+  color : #F38630;
+}
+
+
+ul.nav a:hover { background-color: #DBE6EC;
+                  color: black;
+}
+
+label{
+  font-size: 15px;
+}
+
+#newsetform{
+  background-color: white;
+  padding-left: 30px;
+  padding-bottom: 30px;
+  padding-right: 30px;
+  border: 5px solid grey;
+}
+
+#flashcard {
+  /*background-image: url("http://www.flippity.net/images/Flashcard-BG-Side1.gif");
+  /*background-size: 100% 100%;
+  background-color: #DBE6EC;
+  background-repeat: repeat-y;*/
+  font-size: 25px;
+  /*text-align: center;
+  /*vertical-align: middle;*/
+
+}
+
+.btn-custom {
+  background-color: white;
+  border: 1px solid lightgrey;
+}
+
+#topbutton{
+  margin-top: 42px;
+}
+.magicbuttons{
+  margin:12px;
+}
+
+#newbutton{
+  margin:auto;
+}
+
+.thumbnail:hover{
+  box-shadow : 0 0 40px #69D2E7;
+}
+
+
+img {
+  transition: all 0.3s ease 0s;
+
+}
+/*img:hover {
+  transform: scale(1.1);
+}*/
+
+.not-there{
+  background-color: transparent;
+  border : 0px;
+  box-shadow : none;
+}
+
+.not-there:hover{
+  box-shadow : none;
+}
+.carousel-inner > .item > img {
+    margin: 0 auto;
+}
+
+body {
+    height: 100%;
+}
+
+.carousel,
+.item,
+.active {
+    height: 100%;
+}
+
+
+.carousel-inner {
+    height: 100%;
+}
+
+/* Background images are set within the HTML using inline CSS, not here */
+
+.fill {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+footer {
+    margin: 50px 0;
+}
+
+.carousel-caption {
+    top: 0;
+    bottom: auto;
+    color:black;
+    font-size: 34px
+}
