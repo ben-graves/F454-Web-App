@@ -201,6 +201,15 @@ def changelearnt(flashcardid, learnt):
     cnx.commit()
     return "Success"
 
+@app.route('/getname/userid=<userid>/')
+def getname(userid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    selectquery = "SELECT FirstName FROM users WHERE UserID = %s"
+    cursor.execute(selectquery, (userid,))
+    data = cursor.fetchone()
+    name = data[0]
+    return name
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
