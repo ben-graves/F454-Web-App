@@ -1,0 +1,54 @@
+<main>
+  <div class = "container">
+    <header>
+      <div class ="page-header">
+        <h1>Learn {{set.name}} <small >Manual Testing</h1>
+      </div>
+    </header>
+  </div>
+  <div class="container">
+    <div class = "row">
+      <div class="col-xs-6 col-sm-8 col-md-10">
+        <h3>{{learnt}}/{{total}} Cards Learnt | Current Grade <strong>C</strong> | Exam Date <strong>13/06/16</strong> 8 days left</h3>
+      </div>
+    </div>
+    <div class="progress">
+      <div class="progress-bar progress-bar-success" style="width: {{percentage}}%">
+        {{percentage}}%
+      </div>
+    </div>
+  <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+      <!-- Carousel indicators -->
+      <ol class="carousel-indicators">
+        <li  ng-repeat="card in flashcards" data-target="#myCarousel" data-slide-to={{$index}} class="{{card.active}}"></li>
+      </ol>
+      <!-- Wrapper for carousel items -->
+      <div class="carousel-inner">
+        <div ng-repeat="card in flashcards" class="item thumbnail flashcard {{card.active}}">
+          <center>
+            <div class="half">
+              <div align="left">
+              <form>
+                <input style="font-size:20px;" type="button" id="show-section1" value="Show/Hide Back" ng-click="section1=!section1" />
+              </form>
+              </div>
+              {{card.front}}
+            </div>
+            <div class="half" id=bottom>
+              <section id="section1" ng-show="section1">
+                {{card.back}}
+                <div style="font-size:20px;" align="right">Leant [ ]</div>
+              </section>
+            </div>
+          </center>
+          </div>
+        </div>
+      <!-- Carousel controls -->
+      <a class="carousel-control left" href="//#myCarousel" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      <a class="carousel-control right" href="//#myCarousel" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
+  </div>
+</div>

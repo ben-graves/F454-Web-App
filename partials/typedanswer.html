@@ -1,0 +1,43 @@
+<main>
+  <div class = "container">
+    <header>
+      <div class ="page-header">
+        <h1>Learn {{set.name}} <small >Manual Testing</h1>
+      </div>
+    </header>
+  </div>
+  <div class="container">
+    <div class = "row">
+      <div class="col-xs-6 col-sm-8 col-md-10">
+        <h3>{{learnt}}/{{total}} Cards Learnt | Current Grade <strong>C</strong> | Exam Date <strong>13/06/16</strong> 8 days left</h3>
+      </div>
+    </div>
+    <div class="progress">
+      <div class="progress-bar progress-bar-success" style="width: {{correct}}%;  min-width: 2em;">
+        {{correct}}%
+      </div>
+      <div class="progress-bar progress-bar-danger" style="width: {{incorrect}}%;  min-width: 2em;">
+        {{incorrect}}%
+      </div>
+    </div>
+  <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+      <!-- Wrapper for carousel items -->
+      <div class="carousel-inner">
+        <div ng-repeat="card in flashcards" class="item thumbnail flashcard {{card.active}}">
+          <div class="mc">
+            <div class="typedarea">
+              <form>
+                <div class="control-label col-xs-12">{{card.front}}</div>
+                <div class="col-sm-10">
+                  <input type="text" name="backentry" ng-model="back" id="backentry" class="form-control input-lg" placeholder="Enter Back">
+                </div>
+                <button  class="col-sm-2 btn btn-primary input-lg"  ng-click="">Submit</button>
+              </form>
+            </div>
+        </div>
+      </div>
+      <a class="carousel-control right" href="//#myCarousel" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
+  </div>
+</div>

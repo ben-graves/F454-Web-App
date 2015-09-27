@@ -17,11 +17,11 @@ table{
 }
 
 .icon-success {
-    color: #5CB85C;
+    color: white;
 }
 
 .icon-danger {
-    color: red;
+    color: white;
 }
 
 #subjectimg{
@@ -100,23 +100,20 @@ h2 {
   color: #DBE6EC;
 }
 
-.active {
-  background-color: #F38630;
-  color:white;
-}
+
 
 a {
   color : black;
 }
 
 a:hover {
-  color : #F38630;
-}
+  text-decoration: none;
+};
 
 
 ul.nav a:hover { background-color: #DBE6EC;
                   color: black;
-}
+};
 
 label{
   font-size: 15px;
@@ -157,8 +154,13 @@ label{
   margin:auto;
 }
 
+.thumbnail{
+  padding: 0px;
+}
+
 .thumbnail:hover{
   box-shadow : 0 0 40px #69D2E7;
+  transform: scale(1.02);
 }
 
 
@@ -174,28 +176,22 @@ img {
   background-color: transparent;
   border : 0px;
   box-shadow : none;
-}
+};
 
 .not-there:hover{
   box-shadow : none;
-}
-.carousel-inner > .item > img {
-    margin: 0 auto;
-}
+};
+
 
 body {
     height: 100%;
 }
 
-.carousel,
-.item,
-.active {
-    height: 100%;
-}
+.carousel{
+  width : 100%;
+  margin-bottom: 100px;
+  background-color: orange;
 
-
-.carousel-inner {
-    height: 100%;
 }
 
 /* Background images are set within the HTML using inline CSS, not here */
@@ -223,4 +219,93 @@ footer {
 
 .grade {
     font-size: 72px;
+}
+
+.danger{
+  background-color:  #FF3333;
+}
+
+.success{
+  background-color:  #339A33;
+
+}
+
+.side{
+  height:100px;
+  line-height: 100%;
+  overflow: hidden;
+}
+
+#back{
+  border-top: 1px solid grey;
+}
+
+.modal-header {
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #0480be;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+     color: white;
+ }
+
+ .bottom-tab{
+   color: white;
+   font-size: 25px;
+   padding: 5px;
+ }
+
+
+ .flashcard{
+   margin: 5%;
+   margin-left: 15%;
+   margin-right: 15%;
+   height:70%;
+   font-size: 50px;
+   box-shadow : 0 0 100px grey;
+ }
+
+ .flashcard:hover{
+   box-shadow : 0 0 100px grey;
+ }
+
+.half {
+  height : 50%;
+  padding: 5%
+}
+
+#bottom{
+  border-top: 2px solid grey;
+}
+
+
+.mc{
+  margin: 10%;
+
+}
+
+.mcoptions{
+  font-size: 30px;
+  padding: 10%;
+}
+
+.mcbuttons{
+  font-size: 30px;
+  padding:10%;
+}
+
+.typedarea{
+  font-size: 50px;
+  padding: 5%;
+  margin-top: 10%;
+  margin-bottom: 10;
+}
+
+#backentry{
+  font-size: 30px;
+
 }

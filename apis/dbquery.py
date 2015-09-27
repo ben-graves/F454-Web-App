@@ -1,6 +1,7 @@
 from flask import Flask, session
 from flask import request
 import mysql.connector
+import json
 
 app = Flask(__name__)
 
@@ -210,6 +211,42 @@ def getname(userid):
     data = cursor.fetchone()
     name = data[0]
     return name
+
+@app.route('/getsubjects/userid=<userid>/')
+def getsubjects(userid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    selectquery = "SELECT * FROM subjects WHERE UserID = %s"
+    cursor.execute(selectquery, (userid,))
+    subject_list = cursor.fetchall()
+
+    dict_list = []
+    column_list = ["subjectid","userid","name","image","learnt","total"]
+
+    for i in range(len(subject_list)):
+        dict_list.append({})
+        for j in range(len(column_list)):
+            dict_list[i][column_list[j]] = subject_list[i][j]
+
+    return str(dict_list).replace("'",'"')
+
+@app.route('/getsets/subjectid=<subjectid>/')
+def getsets(subjectid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    selectquery = "SELECT * FROM sets WHERE SubjectID = %s"
+    cursor.execute(selectquery, (subjectid,))
+    set_list = cursor.fetchall()
+
+    dict_list = []
+    column_list = ["setid","subjectid","name","learnt","total","examdate"]
+
+    for i in range(len(set_list)):
+        dict_list.append({})
+        for j in range(len(column_list)):
+            dict_list[i][column_list[j]] = str(set_list[i][j])
+
+    return str(dict_list).replace("'",'"')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
