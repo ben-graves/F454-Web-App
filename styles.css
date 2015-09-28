@@ -290,7 +290,7 @@ footer {
 
 .mcoptions{
   font-size: 30px;
-  padding: 10%;
+
 }
 
 .mcbuttons{
@@ -303,9 +303,24 @@ footer {
   padding: 5%;
   margin-top: 10%;
   margin-bottom: 10;
+  line-height: 100%;
+}
+
+#fronttext{
+  padding-bottom: 3%;
 }
 
 #backentry{
   font-size: 30px;
+}
 
+.smallheader{
+  padding: 0px;
+  padding-top: 10px;
+}
+
+#gradeoption{
+  font-size: 30px;
+  height: auto;
+  width: auto;
 }

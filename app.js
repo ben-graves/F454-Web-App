@@ -188,6 +188,7 @@ $scope.flashcards[0].active = "active"
 
     angular.module("app").controller("typedanswerCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
       $scope.flashcards = [
+        {front:"who is the longest reigning british monarch?", back:"jugar", learnt : "true"},
         {front:"to play", back:"jugar", learnt : "true"},
         {front:"to swim", back:"nadar", learnt : "false"},
         {front:"to paint", back:"pintar", learnt : "true"},
@@ -247,7 +248,11 @@ angular.module("app").controller("newsetCtrl",['$scope', '$routeParams', '$http'
 
 
 angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
-
+  console.log("here")
+  $scope.search = function(front) {
+    var url = "https://www.google.co.uk/#q="+front.replace(" ","+")
+    window.open(url, '_blank').focus();
+  };
     }]);
 
 angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
@@ -396,6 +401,58 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
 
       };
     }]);
+
+    angular.module("app").controller("multiplechoiceCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
+      $scope.flashcards = [
+        {front:"to play", back:"jugar", learnt : "true"},
+        {front:"to swim", back:"nadar", learnt : "false"},
+        {front:"to paint", back:"pintar", learnt : "true"},
+        {front:"to watch", back:"mirar", learnt : "true"},
+        {front:"to please", back:"gustar", learnt : "true"},
+        {front:"to attack", back:"atacar", learnt : "false"},
+        {front:"to take", back: "sacar", learnt : "true"},
+        {front:"to pray", back:"rezar", learnt : "false"},
+        {front:"to get up", back:"levantar", learnt : "false"},
+        {front:"to go for a walk", back:"pasear", learnt : "true"},
+        {front:"to move", back:"mudar", learnt : "true"},
+        {front:"to fix/repair", back:"arreglar", learnt : "false"},
+        {front:"to return/go back", back:"regresar", learnt : "true"},
+        {front:"to turn in", back:"entregar", learnt : "true"},
+        {front:"to enter", back:"entrar", learnt : "true"},
+        {front:"to cease/end", back:"cesar", learnt : "false"},
+        {front:"to play", back:"jugar", learnt : "true"},
+         {front:"to swim", back:"nadar", learnt : "false"},
+         {front:"to paint", back:"pintar", learnt : "true"},
+        {front:"to watch", back:"mirar", learnt : "true"},
+        {front:"to please", back:"gustar", learnt : "false"},
+        {front:"to attack", back:"atacar", learnt : "false"},
+        {front:"to take", back: "sacar", learnt : "false"},
+        {front:"to pray", back:"rezar", learnt : "true"},
+        {front:"to get up", back:"levantar", learnt : "true"},
+        {front:"to go for a walk", back:"pasear", learnt : "true"},
+        {front:"to move", back:"mudar", learnt : "true"},
+        {front:"to fix/repair/straighten up", back:"arreglar", learnt : "false"},
+        {front:"to return/go back", back:"regresar", learnt : "true"},
+        {front:"to turn in", back:"entregar", learnt : "false"},
+        {front:"to enter", back:"entrar", learnt : "true"},
+        {front:"to cease/end", back:"cesar", learnt : "true"}
+     ];
+
+    for (i in $scope.flashcards){
+      $scope.flashcards[i].correct = Math.floor((Math.random() * 4) + 1)
+      $scope.flashcards[i].answers = []
+      for (j = 0; j < 4; j++) {
+        var randnum = Math.floor(Math.random() * $scope.flashcards.length)
+        $scope.flashcards[i].answers.push($scope.flashcards[randnum].back)
+      }
+      $scope.flashcards[i].answers[$scope.flashcards[i].correct] = $scope.flashcards[i].back
+      console.log($scope.flashcards[i])
+    };
+
+    $scope.flashcards[0].active = "active"
+    $scope.correct = 0
+    $scope.incorrect = 0
+        }]);
 
 angular.module("app").controller("setsCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
   $scope.subject = "Computing"
