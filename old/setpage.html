@@ -79,8 +79,9 @@
         <thead>
           <tr>
             <th class="col-xs-1">Number</th>
-            <th class="col-xs-5">Front</th>
-            <th class="col-xs-5">Back</th>
+            <th class="col-xs-4">Front</th>
+            <th class="col-xs-4">Back</th>
+            <th class="col-xs-2">Grade</th>
             <th class="col-xs-1">Learnt?</th>
           </tr>
         </thead>
@@ -89,6 +90,7 @@
             <td>{{$index+1}}</td>
             <td>{{flashcard.front}}</td>
             <td>{{flashcard.back}}</td>
+            <td>{{flashcard.grade}}</td>
             <td><span class={{flashcard.icon}} aria-hidden="true"></span></td>
           </tr>
         </tbody>

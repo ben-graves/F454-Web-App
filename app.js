@@ -7,7 +7,8 @@ var app = angular.module("app", [
       $routeProvider.when('/editset/:userid/:subjectid/:setid/:flashcardid', {templateUrl : 'partials/editset.html', controller: "editsetCtrl"});
       $routeProvider.when('/subjects/:userid', {templateUrl : 'partials/subjects.html', controller: "subjectsCtrl"});
       $routeProvider.when('/sets/:userid/:subjectid', {templateUrl : 'partials/sets.html', controller: "setsCtrl"});
-      $routeProvider.when('/set', {templateUrl : 'partials/set2.html', controller: "setCtrl"});
+      $routeProvider.when('/set/grid/:setid', {templateUrl : 'partials/setgrid.html', controller: "setCtrl"});
+      $routeProvider.when('/set/list/:setid', {templateUrl : 'partials/setlist.html', controller: "setCtrl"});
       $routeProvider.when('/manual/:setid', {templateUrl : 'partials/manual.html', controller: "manualCtrl"});
       $routeProvider.when('/multiplechoice/:setid', {templateUrl : 'partials/multiplechoice.html', controller: "multiplechoiceCtrl"});
       $routeProvider.when('/typedanswer/:setid', {templateUrl : 'partials/typedanswer.html', controller: "typedanswerCtrl"});
@@ -248,7 +249,79 @@ angular.module("app").controller("newsetCtrl",['$scope', '$routeParams', '$http'
 
 
 angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
-  console.log("here")
+  $scope.autoDefine =  function(front, type) {
+      if (type === "0"){
+          $scope.select = function(selected){
+            $('#flashcardback').val($('#flashcardback').val() + selected+'\n');
+          };
+        $scope.definitions_title = "Searching Dictionairy..."
+        $scope.wikipedia_title = "Searching Wikipedia..."
+        $scope.articles = []
+        $scope.definitons = []
+        $('#autoDefine').modal({
+            show: 'true'
+          });
+        var url = "http://localhost:5001/definitions/term="+front+"/"
+         $http.get(url)
+          .then(function(response) {
+            $scope.definitions = response.data
+            $scope.definitions_title = $scope.definitions.length+" Definitions Found"
+            $scope.firstResult = $scope.definitions[0]
+            $scope.selected = {}
+            $scope.selected.text = $scope.firstResult
+            var url = "http://localhost:5001/titleandarticle/term="+front+"/"
+            $http.get(url)
+             .then(function(response) {
+               $scope.articles = response.data
+               $scope.wikipedia_title = $scope.articles.length+" Wikipedia Articles Found"
+             });
+            /*$scope.getDefinition =  function(define) {
+              var term = define.term
+              var sentences = define.sentences
+              /*if (term === undefined){
+                term = defaultval
+              }
+              var url_def = "http://localhost:5001/define/term="+term+"/sentences="+sentences
+               $http.get(url_def)
+                .then(function(response) {
+                  console.log(response.data)
+                var defined_data = response.data
+                  $('#flashcardback').val($('#flashcardback').val() + defined_data+'\n');
+                  console.log("aqui")});
+
+                };*/
+
+          });
+        }
+        else if (type === "1") {
+          $('#searchPrompt').modal({
+              show: 'true'
+            });
+        }
+        else if (type === "2") {
+          $scope.toplanguages = [{'name': 'English', 'code': 'en'}, {'name': 'French', 'code': 'fr'}, {'name': 'Spanish', 'code': 'es'}, {'name': 'German', 'code': 'de'},{'name': 'Chinese', 'code': 'zh'}]
+          $scope.alllanguages = [{'name': 'Afrikaans', 'code': 'af'}, {'name': 'Albanian', 'code': 'sq'}, {'name': 'Arabic', 'code': 'ar'}, {'name': 'Armenian', 'code': 'hy'}, {'name': 'Azerbaijani', 'code': 'az'}, {'name': 'Basque', 'code': 'eu'}, {'name': 'Belarusian', 'code': 'be'}, {'name': 'Bengali', 'code': 'bn'}, {'name': 'Bosnian', 'code': 'bs'}, {'name': 'Bulgarian', 'code': 'bg'}, {'name': 'Catalan', 'code': 'ca'}, {'name': 'Cebuano', 'code': 'ceb'}, {'name': 'Chichewa', 'code': 'ny'}, {'name': 'Chinese', 'code': 'zh'}, {'name': 'Chinese (Simplified)', 'code': 'zh-CN'}, {'name': 'Chinese (Traditional)', 'code': 'zh-TW'}, {'name': 'Croatian', 'code': 'hr'}, {'name': 'Czech', 'code': 'cs'}, {'name': 'Danish', 'code': 'da'}, {'name': 'Dutch', 'code': 'nl'}, {'name': 'English', 'code': 'en'}, {'name': 'Esperanto', 'code': 'eo'}, {'name': 'Estonian', 'code': 'et'}, {'name': 'Filipino', 'code': 'tl'}, {'name': 'Finnish', 'code': 'fi'}, {'name': 'French', 'code': 'fr'}, {'name': 'Galician', 'code': 'gl'}, {'name': 'Georgian', 'code': 'ka'}, {'name': 'German', 'code': 'de'}, {'name': 'Greek', 'code': 'el'}, {'name': 'Gujarati', 'code': 'gu'}, {'name': 'Haitian Creole', 'code': 'ht'}, {'name': 'Hausa', 'code': 'ha'}, {'name': 'Hebrew', 'code': 'iw'}, {'name': 'Hindi', 'code': 'hi'}, {'name': 'Hmong', 'code': 'hmn'}, {'name': 'Hungarian', 'code': 'hu'}, {'name': 'Icelandic', 'code': 'is'}, {'name': 'Igbo', 'code': 'ig'}, {'name': 'Indonesian', 'code': 'id'}, {'name': 'Irish', 'code': 'ga'}, {'name': 'Italian', 'code': 'it'}, {'name': 'Japanese', 'code': 'ja'}, {'name': 'Javanese', 'code': 'jw'}, {'name': 'Kannada', 'code': 'kn'}, {'name': 'Kazakh', 'code': 'kk'}, {'name': 'Khmer', 'code': 'km'}, {'name': 'Korean', 'code': 'ko'}, {'name': 'Lao', 'code': 'lo'}, {'name': 'Latin', 'code': 'la'}, {'name': 'Latvian', 'code': 'lv'}, {'name': 'Lithuanian', 'code': 'lt'}, {'name': 'Macedonian', 'code': 'mk'}, {'name': 'Malagasy', 'code': 'mg'}, {'name': 'Malay', 'code': 'ms'}, {'name': 'Malayalam', 'code': 'ml'}, {'name': 'Maltese', 'code': 'mt'}, {'name': 'Maori', 'code': 'mi'}, {'name': 'Marathi', 'code': 'mr'}, {'name': 'Mongolian', 'code': 'mn'}, {'name': 'Myanmar (Burmese)', 'code': 'my'}, {'name': 'Nepali', 'code': 'ne'}, {'name': 'Norwegian', 'code': 'no'}, {'name': 'Persian', 'code': 'fa'}, {'name': 'Polish', 'code': 'pl'}, {'name': 'Portuguese', 'code': 'pt'}, {'name': 'Punjabi', 'code': 'pa'}, {'name': 'Romanian', 'code': 'ro'}, {'name': 'Russian', 'code': 'ru'}, {'name': 'Serbian', 'code': 'sr'}, {'name': 'Sesotho', 'code': 'st'}, {'name': 'Sinhala', 'code': 'si'}, {'name': 'Slovak', 'code': 'sk'}, {'name': 'Slovenian', 'code': 'sl'}, {'name': 'Somali', 'code': 'so'}, {'name': 'Spanish', 'code': 'es'}, {'name': 'Sundanese', 'code': 'su'}, {'name': 'Swahili', 'code': 'sw'}, {'name': 'Swedish', 'code': 'sv'}, {'name': 'Tajik', 'code': 'tg'}, {'name': 'Tamil', 'code': 'ta'}, {'name': 'Telugu', 'code': 'te'}, {'name': 'Thai', 'code': 'th'}, {'name': 'Turkish', 'code': 'tr'}, {'name': 'Ukrainian', 'code': 'uk'}, {'name': 'Urdu', 'code': 'ur'}, {'name': 'Uzbek', 'code': 'uz'}, {'name': 'Vietnamese', 'code': 'vi'}, {'name': 'Welsh', 'code': 'cy'}, {'name': 'Yiddish', 'code': 'yi'}, {'name': 'Yoruba', 'code': 'yo'}, {'name': 'Zulu', 'code': 'zu'}]
+          $scope.translate = function (langfrom, langto) {
+            var url = "http://localhost:5001/translate/term="+front+"/langfrom="+langfrom+"/langto="+langto+"/"
+            $http.get(url)
+             .then(function(response) {
+               $('#flashcardback').val($('#flashcardback').val() + response.data+'\n');
+             });
+          }
+          $('#autoTranslate').modal({
+              show: 'true'
+            });
+
+        }
+        else  {
+          $('#errorBox').modal({
+              show: 'true'
+            });
+        }
+
+      }
+
+
   $scope.search = function(front) {
     var url = "https://www.google.co.uk/#q="+front.replace(" ","+")
     window.open(url, '_blank').focus();
@@ -256,6 +329,9 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
     }]);
 
 angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
+
+
+
   $scope.set = {name : "Essential Verbs",
                 subject : "Spanish"};
   $scope.flashcards = [

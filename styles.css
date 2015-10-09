@@ -1,6 +1,7 @@
 *{
   font-family: Calibri Light;
   transition: all 0.3s ease 0s;
+
 }
 
 h1 {
@@ -22,6 +23,14 @@ table{
 
 .icon-danger {
     color: white;
+}
+
+.list-success {
+    color: green;
+}
+
+.list-danger {
+    color: red;
 }
 
 #subjectimg{
@@ -127,7 +136,7 @@ label{
   border: 5px solid grey;
 }
 
-#flashcard {
+.flashcardinput {
   /*background-image: url("http://www.flippity.net/images/Flashcard-BG-Side1.gif");
   /*background-size: 100% 100%;
   background-color: #DBE6EC;
@@ -223,10 +232,12 @@ footer {
 
 .danger{
   background-color:  #FF3333;
+  border-left: 5px solid red;
 }
 
 .success{
   background-color:  #339A33;
+  border-left: 5px solid green;
 
 }
 
@@ -252,6 +263,19 @@ footer {
      border-top-right-radius: 5px;
      color: white;
  }
+
+ .modal-header-error {
+     padding:9px 15px;
+     border-bottom:1px solid #eee;
+     background-color: red;
+     -webkit-border-top-left-radius: 5px;
+     -webkit-border-top-right-radius: 5px;
+     -moz-border-radius-topleft: 5px;
+     -moz-border-radius-topright: 5px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      color: white;
+  }
 
  .bottom-tab{
    color: white;
@@ -323,4 +347,81 @@ footer {
   font-size: 30px;
   height: auto;
   width: auto;
+}
+
+.view-change {
+  padding-top: 50px;
+}
+
+.definition{
+  background: white;
+  border-radius:3px;
+  box-shadow : 0 0 5px darkgrey;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding : 5px;
+  width : 100%;
+  font-size: 15px;
+  text-align: left;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.definition:hover{
+  background: #DBE6EC;
+  box-shadow : 0 0 5px black;
+}
+
+.article{
+  background: white;
+  border-radius:3px;
+  box-shadow : 0 0 5px darkgrey;
+  padding : 3px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width : 100%;
+  font-size: 15px;
+  text-align: left;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+
+  text-decoration: none;
+  font-weight: normal;
+  height : 100px;
+}
+
+.article:hover{
+  background: #DBE6EC;
+  box-shadow : 0 0 5px black;
+}
+
+
+
+.nopadding{
+  padding: 0px;
+  margin: 0px;
+}
+
+textarea {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.searchbar{
+  font-size: 35px;
+  border-radius: 10px;
+  border: 1px solid navy;
+  background: white;
+}
+
+.searchbutton{
+  font-size: 25px;
+  border-radius: 10px;
+  border: 0px solid navy;
+  background: white;
+
 }

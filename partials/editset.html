@@ -14,9 +14,11 @@
       <div class="col-md-6">
         <h3>Type</h3>
         <form>
-          <label class="radio-inline"><input type="radio" name="optradio">Term & Definition</label>
-          <label class="radio-inline"><input type="radio" name="optradio">Question & Answer</label>
-          <label class="radio-inline"><input type="radio" name="optradio">Term & Translation</label>
+          <div class="btn-group" id="#typeRadio">
+            <label class="radio-inline"><input type="radio" name="optradio" data-ng-model="carddetails.type" value="0">Term & Definition</label>
+            <label class="radio-inline"><input type="radio" name="optradio" data-ng-model="carddetails.type" value="1">Question & Answer</label>
+            <label class="radio-inline"><input type="radio" name="optradio" data-ng-model="carddetails.type" value="2">Term & Translation</label>
+          </div>
         </form>
       </div>
       <div class="col-md-2">
@@ -37,19 +39,19 @@
       <form role="form">
         <h3>Content</h3>
         <div class="form-group col-sm-5">
-          <label for="name">Front</label>
-          <textarea id = "flashcard" class="form-control" rows="5" ng-model="carddetails.front"></textarea>
+          <label for="flashcardfront">Front</label>
+          <textarea id = "flashcardfront"  class="flashcardinput form-control" rows="5" cols = "20" wrap="hard" ng-model="carddetails.front"></textarea>
         </div>
         <div class = "col-sm-2">
           <center>
-            <img id = "topbutton" class="magicbuttons" src="images/bolt1.png" width=65px></img>
+            <img id = "topbutton" class="magicbuttons" src="images/bolt1.png" ng-click="autoDefine(carddetails.front, carddetails.type)" width=65px></img>
             <br>
             <img class="magicbuttons" ng-click="search(carddetails.front)" src="images/search.png" width=65px></img>
           </center>
         </div>
         <div class="form-group col-sm-5">
-          <label for="name">Back</label>
-          <textarea  id = "flashcard" class="form-control" rows="5"></textarea>
+          <label for="flashcardback">Back</label>
+          <textarea  id = "flashcardback" class="flashcardinput form-control" rows="5"></textarea>
         </div>
       </form>
     </div>
@@ -58,5 +60,113 @@
     <img class="col-xs-offset-9 col-xs-1" src="images/tick.png" width=65px></img>
     <img class="col-xs-1" src="images/arrow-right.png" width=65px></img>
   </div>
+  </div>
+
+  <!-- Modal Definition -->
+  <div class="modal fade" id="autoDefine" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Auto Define</h4>
+        </div>
+        <div class="modal-body">
+          <form class = "form-horizontal">
+          <div class="row form-group">
+            <div class="col-sm-6">
+              <h3 class="nopadding">{{definitions_title}}</h3><br>
+              <div class="btn-group-vertical col-sm-12" id="#results-group" role="group" aria-label="...">
+                  <div   ng-repeat="definition in definitions">
+                    <label  class="radio-vertical definition"><input type="radio" name="optradio" value={{definition}} ng-model="selected.text"> {{definition}}</label>
+                  </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <h3 class="nopadding">{{wikipedia_title}}</h3><br>
+              <div  class="col-sm-6" ng-repeat="article in articles">
+                <label  class="radio-vertical article"><h4 class = "nopadding"><input type="radio" name="optradio" value={{article.text}} ng-model="selected.text"> {{article.title}}<small> {{article.text}}</small></h4></label>
+                <div align="right"><a href={{article.link}} target="_blank">Full Article</a></div>
+
+              </div>
+            </div>
+          </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" ng-click="select(selected.text)" data-dismiss="modal">Select</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Question -->
+  <div class="modal fade" id="searchPrompt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header-error">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Auto Define Unavailable for questions</h4>
+        </div>
+        <div class="modal-body">
+          <h4>Try searching your question...</h4>
+          <center><button ng-click="search(carddetails.front)" class="searchbar">{{carddetails.front}}  <span class="glyphicon glyphicon-search searchbutton" aria-hidden="true"></span></button></center>
+    </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Translation -->
+  <div class="modal fade" id="autoTranslate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Translate</h4>
+        </div>
+        <div class="modal-body">
+          <form class = "form-horizontal">
+          <div class="row form-group">
+            <div class="col-sm-6">
+              <h3 class="nopadding">Translate From</h3><br>
+              <select class="form-control input-lg"  ng-model="langfrom">
+                <optgroup label="Top Languages">
+                  <option ng-repeat="language in toplanguages" value={{language.code}}>{{language.name}}</option>
+                </optgroup>
+                <optgroup label="All Languages">
+                  <option ng-repeat="language in alllanguages" value={{language.code}}>{{language.name}}</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <h3 class="nopadding">Translate To</h3><br>
+              <select class="form-control input-lg"  ng-model="langto">
+                <optgroup label="Top Languages">
+                  <option ng-repeat="language in toplanguages" value={{language.code}}>{{language.name}}</option>
+                </optgroup>
+                <optgroup label="All Languages">
+                  <option ng-repeat="language in alllanguages" value={{language.code}}>{{language.name}}</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" ng-click="translate(langfrom, langto)" data-dismiss="modal">Translate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Error -->
+  <div class="modal fade" id="errorBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header-error">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Error</h4>
+        </div>
+        <div class="modal-body">
+          <h4>Please select a type first</h4>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
