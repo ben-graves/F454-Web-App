@@ -94,7 +94,9 @@ h2 {
 
 .nav-button{
   color:white;
+}
 
+.nav-button:hover{background-color: #F38630;
 
 }
 
@@ -104,10 +106,6 @@ h2 {
   font-size: 15px;
 }
 
-.badge:hover{
-  background-color: black;
-  color: #DBE6EC;
-}
 
 
 
@@ -117,12 +115,10 @@ a {
 
 a:hover {
   text-decoration: none;
-};
+}
 
 
-ul.nav a:hover { background-color: #DBE6EC;
-                  color: black;
-};
+.active {background-color: #F38630;}
 
 label{
   font-size: 15px;
@@ -192,6 +188,7 @@ img {
 };
 
 
+
 body {
     height: 100%;
 }
@@ -199,7 +196,7 @@ body {
 .carousel{
   width : 100%;
   margin-bottom: 100px;
-  background-color: orange;
+  background-color: #FA6900;
 
 }
 
@@ -291,6 +288,7 @@ footer {
    height:70%;
    font-size: 50px;
    box-shadow : 0 0 100px grey;
+   background: white;
  }
 
  .flashcard:hover{
@@ -423,5 +421,14 @@ textarea {
   border-radius: 10px;
   border: 0px solid navy;
   background: white;
+
+}
+
+#sortbydropdown {
+  margin-bottom: 10px;
+}
+
+.right-align{
+  text-align: right;
 
 }

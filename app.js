@@ -15,7 +15,6 @@ var app = angular.module("app", [
       $routeProvider.otherwise({templateUrl : 'partials/notfound.html'});
     }]);
 
-
     angular.module("app").controller("welcomeCtrl", function($scope, $http) {
 
       $scope.signupmessage = {
@@ -189,7 +188,6 @@ $scope.flashcards[0].active = "active"
 
     angular.module("app").controller("typedanswerCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
       $scope.flashcards = [
-        {front:"who is the longest reigning british monarch?", back:"jugar", learnt : "true"},
         {front:"to play", back:"jugar", learnt : "true"},
         {front:"to swim", back:"nadar", learnt : "false"},
         {front:"to paint", back:"pintar", learnt : "true"},
@@ -230,6 +228,7 @@ $scope.flashcards[0].active = "active"
 
 angular.module("app").controller("startCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
   var userid = $routeParams.userid;
+  $scope.userid = userid
   var url = "http://localhost:5000/getname/userid="+userid+"/"
    $http.get(url).then(function(response) {
      // success
@@ -539,8 +538,49 @@ angular.module("app").controller("setsCtrl",['$scope', '$routeParams', '$http', 
     {id: "4", name : "Chapter 4", image : "images/subjects/Computing.png", learnt : 198, total : 243},
     {id: "5", name : "Chapter 5", image : "images/subjects/Computing.png", learnt : 23, total : 53},
   ];*/
+  $scope.userid = $routeParams.userid
+  var sort_by = function(field, reverse, primer){
 
+   var key = primer ?
+       function(x) {return primer(x[field])} :
+       function(x) {return x[field]};
+
+   reverse = !reverse ? 1 : -1;
+
+   return function (a, b) {
+       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+      }
+    }
+
+    sort_by_date = function(a,b) {
+      return new Date(a.examdate).getTime() - new Date(b.examdate).getTime()
+    };
+
+  $scope.updatesort = function(sortbynum){
+      console.log(sortbynum)
+    if (sortbynum === "0") {
+      console.log("0")
+      $scope.sets = $scope.sets.sort(sort_by('name', false, function(a){return a.toUpperCase()}));
+
+
+    }
+    else if (sortbynum === "1") {
+    console.log("1")
+      $scope.sets.sort(sort_by_date);
+      console.log($scope.sets[0])
+    }
+    else{
+
+        console.log("2")
+        $scope.sets = $scope.sets.sort(sort_by('percentage', false, parseInt));
+
+    }
+
+
+  }
   var subjectid = $routeParams.subjectid;
+
+  $scope.sortby = "0";
 
   var url = "http://localhost:5000/getsets/subjectid="+subjectid+"/"
    $http.get(url).then(function(response) {

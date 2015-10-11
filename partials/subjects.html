@@ -1,3 +1,25 @@
+<div class="navbar navbar-custom navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class = "sr only">Toggle Navigation</span>
+        <span class = "icon-bar"></span>
+        <span class = "icon-bar"></span>
+        <span class = "icon-bar"></span>
+      </button>
+      <a class = "navbar-brand"  href = "#"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+    </div>
+    <div class = "navbar-collapse collapse">
+      <ul class = "nav navbar-nav navbar-right">
+        <li ><a  class="nav-button" href="/#/start/{{userid}}">Start</a></li>
+        <li><a class="nav-button" href="/#/newset/{{userid}}">New Set</a></li>
+        <li><a class="nav-button" data-toggle="modal" data-target="#newSubject">New Subject</a></li>
+        <li><a class="nav-button active" href="/#/subjects/{{userid}}">Subjects</a></li>
+        <li><a class="nav-button" href="/#/">Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 <main>
   <div class = "container">
     <header>
@@ -39,7 +61,7 @@
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" >
         <div class="thumbnail not-there" data-toggle="modal" data-target="#newSubject">
           <img id="subjectimg" src="images/add.png" width=200px>
-          <h3 class = "text-center">New Subject</h3>
+          <h3 class = "text-center">New Subject</h3><br><br><br><br>
         </div>
       </div>
       <!-- Modal -->
@@ -79,11 +101,8 @@
                     <p>{{errormessage.subject}}</p>
                   </div>-->
               </div>
-
             <!--</div>-->
         </div>
-
-            
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" ng-click="createSubject(subjectdetails)" data-dismiss="modal">Save</button>
             </div>
