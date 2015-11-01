@@ -2,12 +2,11 @@
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class = "sr only">Toggle Navigation</span>
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
       </button>
-      <a class = "navbar-brand"  href = "#"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
@@ -30,7 +29,7 @@
   <div class="container">
     <div class = "row">
       <div class="col-xs-6 col-sm-8 col-md-10">
-        <h3>{{learnt}}/{{total}} Cards Learnt | Current Grade <strong>C</strong> | Exam Date <strong>13/06/16</strong> 8 days left</h3>
+        <h3>{{learnt}}/{{total}} Cards Learnt | Current Grade <strong>{{grade}}</strong> | Exam Date <strong>13/06/16</strong></h3>
       </div>
     </div>
     <div class="progress">
@@ -41,27 +40,33 @@
   <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
       <!-- Carousel indicators -->
       <ol class="carousel-indicators">
-        <li  ng-repeat="card in flashcards" data-target="#myCarousel" data-slide-to={{$index}} class="{{card.active}}"></li>
+        <li  ng-repeat="card in flashcards" data-target="#myCarousel" data-slide-to={{$index}} class={{card.active}}></li>
       </ol>
       <!-- Wrapper for carousel items -->
       <div class="carousel-inner">
         <div ng-repeat="card in flashcards" class="item thumbnail flashcard {{card.active}}">
-          <center>
             <div class="half">
-              <div align="left">
-              <form>
-                <input class = "btn" style="font-size:20px;" type="button" id="show-section1" value="Show/Hide Back" ng-click="section1=!section1" />
-              </form>
+              <div class = "row">
+                <div class="col-xs-6"align="left">
+                  <form>
+                    <input class = "btn" style="font-size:15px;" type="button" id="show-section1" value="Show/Hide Back" ng-click="section1=!section1" />
+                  </form>
+                </div>
+                <div class="col-xs-6" align="right">
+                  <h2 class="nopadding">{{card.grade}}</h2>
+                </div>
               </div>
-              {{card.front}}
+              <center>{{card.front}}</center>
             </div>
             <div class="half" id=bottom>
               <section id="section1" ng-show="section1">
-                {{card.back}}
-                <div style="font-size:20px;" align="right">Leant: <input type="checkbox" name="my-checkbox" checked></div>
+                <center>{{card.back}}</center>
+                <div style="font-size:20px;" align="right">Leant: <input type="checkbox" name="my-checkbox" ng-model="card.learnt" ng-click="changelearnt(card)"></div>
               </section>
             </div>
-          </center>
+          </div>
+          <div class="item thumbnail flashcard">
+            <center><h1>Testing Compltete<br><a href="/#/summary/{{userid}}/{{setid}}">View summary</a></h1></center>
           </div>
         </div>
       <!-- Carousel controls -->

@@ -1,5 +1,6 @@
 from flask import Flask, session
 from flask import request
+import random
 import mysql.connector
 import json
 
@@ -17,7 +18,10 @@ def createuser(firstname, lastname, dob, emailaddress, username, password):
     try:
         cursor.execute(query, user_data)
         cnx.commit()
-        message = "Success"
+        selectquery = "SELECT UserID FROM users WHERE Username = %s"
+        cursor.execute(selectquery, (username,))
+        userid = cursor.fetchone()
+        message = str(userid[0])
     except mysql.connector.errors.IntegrityError:
         message = "Username Taken"
     return message
@@ -52,7 +56,15 @@ def createset(subjectid, name, examdate):
     try:
         cursor.execute(query, set_data)
         cnx.commit()
-        message = "Success"
+        query = "SELECT SetID FROM sets WHERE SubjectID = %s AND Name = %s"
+        cursor.execute(query, (subjectid, name))
+        message = cursor.fetchall()
+        message = str(message[len(message)-1][0])
+        query = "SELECT FlashcardID FROM flashcards"
+        cursor.execute(query)
+        allids = sorted(cursor.fetchall())
+        nextcard = int(allids[len(allids)-1][0])+1
+        message += "/"+str(nextcard)
     except mysql.connector.errors.IntegrityError:
         message = "Error"
     return message
@@ -145,7 +157,7 @@ def changelearnt(flashcardid, learnt):
     cnx = mysql.connector.connect(user="root", database="e-flashcards")
     cursor = cnx.cursor()
 
-    if learnt == "True":
+    if learnt == "true":
         learnt = True
         bool_val = "1"
     else:
@@ -247,6 +259,274 @@ def getsets(subjectid):
             dict_list[i][column_list[j]] = str(set_list[i][j])
 
     return str(dict_list).replace("'",'"')
+
+@app.route('/getflashcard/setid=<setid>/flashcardid=<flashcardid>')
+def getflashcard(setid, flashcardid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    selectquery = "SELECT * FROM flashcards WHERE SetID = %s AND FlashcardID = %s"
+    cursor.execute(selectquery, (setid, flashcardid))
+    flashcarddetails = cursor.fetchone()
+    if flashcarddetails:
+        details_dict = createdict(flashcarddetails, ["flashcardid", "typeid", "setid", "front", "back", "grade", "learnt"])
+        return json.dumps(details_dict)
+    else:
+        selectquery = "SELECT * FROM sets WHERE SetID = %s"
+        cursor.execute(selectquery, (setid, ))
+        setdetails = cursor.fetchone()
+        if setdetails:
+            addquery = ("INSERT INTO flashcards"
+                        "(FlashcardID, TypeID, SetID, Front, Back, Grade, Learnt)"
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s)")
+            cursor.execute(addquery, (flashcardid, 1, setid, '', '', "None", 0))
+            cnx.commit()
+            selectquery = "SELECT * FROM flashcards WHERE SetID = %s AND FlashcardID = %s"
+            cursor.execute(selectquery, (setid, flashcardid))
+            flashcarddetails = cursor.fetchone()
+            details_dict = createdict(flashcarddetails, ["flashcardid", "typeid", "setid", "front", "back", "grade", "learnt"])
+            return json.dumps(details_dict)
+
+@app.route('/saveflashcard/setid=<setid>/flashcardid=<flashcardid>/typeid=<typeid>/front=<front>/back=<back>/grade=<grade>/learnt=<learnt>')
+def saveflashcard(setid, flashcardid, typeid, front, back, grade, learnt):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    query = ("""
+        UPDATE flashcards
+        SET TypeID=%s, SetID=%s, Front=%s, Back=%s, Grade=%s, Learnt=%s
+        WHERE FlashcardID=%s
+        """)
+    cursor.execute(query, (typeid, setid, front, back, grade, 0, flashcardid))
+    cnx.commit()
+    return "success"
+
+def createdict(details_list, titles_list):
+    mydict = {}
+    for i in range (len(details_list)):
+        mydict[titles_list[i]] = details_list[i]
+    return mydict
+
+
+@app.route('/getcardsetdetails/subjectid=<subjectid>/setid=<setid>/flashcardid=<flashcardid>')
+def getcardsetdetails(subjectid, setid, flashcardid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    cardsetdetails = {}
+    query = "SELECT Name FROM subjects WHERE SubjectID = %s"
+    cursor.execute(query, (subjectid, ))
+    cardsetdetails["subjectname"] = cursor.fetchone()[0]
+
+    query = "SELECT Name FROM sets WHERE SetID = %s"
+    cursor.execute(query, (setid, ))
+    cardsetdetails["setname"] = cursor.fetchone()[0]
+
+    query = "SELECT FlashcardID FROM flashcards WHERE SetID = %s"
+    cursor.execute(query, (setid, ))
+    id_list = cursor.fetchall()
+    id_list_formatted = []
+    for unformatted_id in id_list:
+        id_list_formatted.append(unformatted_id[0])
+
+    cardsetdetails["flashcardidlist"] = id_list_formatted
+
+    cardno = id_list_formatted.index(int(flashcardid))
+    cardsetdetails["cardno"] = cardno+1
+    if cardno == len(id_list_formatted)-1:
+        query = "SELECT FlashcardID FROM flashcards"
+        cursor.execute(query)
+        existing_ids = sorted(cursor.fetchall())
+        cardsetdetails["nextid"] = existing_ids[len(existing_ids)-1][0]+1
+    else:
+        cardsetdetails["nextid"] = id_list_formatted[cardno+1]
+    if cardno == 0:
+        cardsetdetails["previd"] = flashcardid
+    else:
+        cardsetdetails["previd"] = id_list_formatted[cardno-1]
+
+    cardsetdetails["totalcards"] = len(id_list_formatted)
+
+
+    return json.dumps(cardsetdetails)
+
+@app.route('/getcardstolearn/setid=<setid>/shuffle=<shuffle>/unlearntonly=<unlearntonly>')
+def getcardstolearn(setid,shuffle, unlearntonly):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    query = "SELECT FlashcardID, Front, Back, Learnt, Grade FROM flashcards WHERE SetID = %s"
+    if unlearntonly == "1":
+        query += "AND Learnt = 0"
+    cursor.execute(query, (setid, ))
+    card_list = cursor.fetchall()
+    dict_list = []
+    for card in card_list:
+        dict_list.append(createdict(card, ["flashcardid", "front", "back", "learnt", "grade"]))
+    if shuffle == "1":
+        random.shuffle(dict_list)
+    return str(dict_list).replace("'",'"')
+
+@app.route('/getlearntandtotal/setid=<setid>')
+def getlearntandtotal(setid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    query = "SELECT Learnt FROM flashcards WHERE SetID = %s"
+    cursor.execute(query, (setid, ))
+    status_list = cursor.fetchall()
+    learnt = 0
+    unlearnt = 0
+    for status in status_list:
+        if status[0] == 1:
+            learnt += 1
+        else:
+            unlearnt += 1
+
+    total = learnt+unlearnt
+
+    query = ("""
+        UPDATE sets
+        SET LearntCards=%s, TotalCards=%s
+        WHERE SetID=%s
+        """)
+    cursor.execute(query,(learnt, total, setid))
+    cnx.commit()
+
+    return json.dumps({"learnt":learnt, "total":total, "unlearnt":unlearnt})
+
+@app.route('/getlearntandtotalsubject/subjectid=<subjectid>')
+def getlearntandtotalsubject(subjectid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    query = "SELECT SetID FROM sets WHERE SubjectID = %s"
+    cursor.execute(query, (subjectid, ))
+    set_list = cursor.fetchall()
+    subjecttotal = 0
+    subjectlearnt = 0
+    for setid in set_list:
+        setid = setid[0]
+        query = "SELECT Learnt FROM flashcards WHERE SetID = %s"
+        cursor.execute(query, (setid, ))
+        status_list = cursor.fetchall()
+        learnt = 0
+        unlearnt = 0
+        for status in status_list:
+            if status[0] == 1:
+                learnt += 1
+            else:
+                unlearnt += 1
+
+        total = learnt+unlearnt
+
+        subjecttotal += total
+        subjectlearnt += learnt
+
+        query = ("""
+            UPDATE sets
+            SET LearntCards=%s, TotalCards=%s
+            WHERE SetID=%s
+            """)
+        cursor.execute(query,(learnt, total, setid))
+        cnx.commit()
+
+    query = ("""
+        UPDATE subjects
+        SET LearntCards=%s, TotalCards=%s
+        WHERE SubjectID=%s
+        """)
+    cursor.execute(query,(subjectlearnt, subjecttotal, subjectid))
+    cnx.commit()
+
+    return json.dumps({"learnt":subjectlearnt, "total":subjecttotal})
+
+@app.route('/getlearntandtotaluser/userid=<userid>')
+def getlearntandtotaluser(userid):
+        cnx = mysql.connector.connect(user="root", database="e-flashcards")
+        cursor = cnx.cursor()
+        query = "SELECT SubjectID FROM subjects WHERE UserID = %s"
+        cursor.execute(query, (userid, ))
+        subject_list = cursor.fetchall()
+        usertotal = 0
+        userlearnt = 0
+        for subjectid in subject_list:
+            subjectid = subjectid[0]
+
+            query = "SELECT SetID FROM sets WHERE SubjectID = %s"
+            cursor.execute(query, (subjectid, ))
+            set_list = cursor.fetchall()
+            subjecttotal = 0
+            subjectlearnt = 0
+            for setid in set_list:
+                setid = setid[0]
+                query = "SELECT Learnt FROM flashcards WHERE SetID = %s"
+                cursor.execute(query, (setid, ))
+                status_list = cursor.fetchall()
+                learnt = 0
+                unlearnt = 0
+                for status in status_list:
+                    if status[0] == 1:
+                        learnt += 1
+                    else:
+                        unlearnt += 1
+
+                total = learnt+unlearnt
+
+                subjecttotal += total
+                subjectlearnt += learnt
+
+                query = ("""
+                    UPDATE sets
+                    SET LearntCards=%s, TotalCards=%s
+                    WHERE SetID=%s
+                    """)
+                cursor.execute(query,(learnt, total, setid))
+                cnx.commit()
+
+            query = ("""
+                UPDATE subjects
+                SET LearntCards=%s, TotalCards=%s
+                WHERE SubjectID=%s
+                """)
+            cursor.execute(query,(subjectlearnt, subjecttotal, subjectid))
+            cnx.commit()
+            usertotal += subjecttotal
+            userlearnt += subjectlearnt
+
+        return json.dumps({"learnt":userlearnt, "total":usertotal})
+
+@app.route('/getsubjectdetails/subjectid=<subjectid>/')
+def getgetsubjectdetails(subjectid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    query = "SELECT * FROM subjects WHERE SubjectID = %s"
+    cursor.execute(query, (subjectid, ))
+    subjectdetails = cursor.fetchone()
+    details_dict = createdict(subjectdetails, ["subjectid", "userid", "name", "image", "learnt", "total"])
+    return json.dumps(details_dict)
+
+@app.route('/getsetdetails/setid=<setid>/')
+def getsetdetails(setid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    query = "SELECT * FROM sets WHERE SetID = %s"
+    cursor.execute(query, (setid, ))
+    setdetails = cursor.fetchone()
+    details_dict = createdict(setdetails, ["setid", "subjectid", "name", "learnt", "total", "examdate"])
+    details_dict["examdate"] = str(details_dict["examdate"])
+
+    query = "SELECT * FROM flashcards WHERE SetID = %s"
+    cursor.execute(query, (setid, ))
+    cards = cursor.fetchall()
+    dict_list = []
+    for card in cards:
+        dict_list.append(createdict(card, ["flashcardid", "typeid", "setid", "front", "back", "grade", "learnt"]))
+    details_dict["cards"] =dict_list
+    return json.dumps(details_dict)
+
+@app.route('/getfirstcard/setid=<setid>/')
+def getfirstcard(setid):
+    cnx = mysql.connector.connect(user="root", database="e-flashcards")
+    cursor = cnx.cursor()
+    query = "SELECT FlashcardID FROM flashcards WHERE SetID = %s"
+    cursor.execute(query, (setid, ))
+    cardid = cursor.fetchone()
+    return str(cardid[0])
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

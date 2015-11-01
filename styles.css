@@ -5,8 +5,9 @@
 }
 
 h1 {
-  font-size: 72px;
+  font-size: 8vh;
 }
+
 
 #white {
   background-color: white;
@@ -34,9 +35,9 @@ table{
 }
 
 #subjectimg{
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-top: 10px;
+  padding-left: 25%;
+  padding-right: 25%;
+  padding-top: 5%;
 }
 
 body{
@@ -158,9 +159,10 @@ label{
 #newbutton{
   margin:auto;
 }
+#subjectthumbnail{
+  min-width:105px;
+  min-height: 180px;
 
-.thumbnail{
-  padding: 0px;
 }
 
 .thumbnail:hover{
@@ -196,7 +198,7 @@ body {
 .carousel{
   width : 100%;
   margin-bottom: 100px;
-  background-color: #FA6900;
+  background-color: #FA8630;
 
 }
 
@@ -235,7 +237,11 @@ footer {
 .success{
   background-color:  #339A33;
   border-left: 5px solid green;
+}
 
+.total{
+  background-color:  #F1F5F7;
+  border-left: 5px solid #3366FF;
 }
 
 .side{
@@ -286,7 +292,7 @@ footer {
    margin-left: 15%;
    margin-right: 15%;
    height:70%;
-   font-size: 50px;
+   font-size: 6vh;
    box-shadow : 0 0 100px grey;
    background: white;
  }
@@ -430,5 +436,20 @@ textarea {
 
 .right-align{
   text-align: right;
+}
 
+.summary{
+  marign: 20px;
+}
+
+.navbar-toggle .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: white;
+  border-radius: 2px;
+}
+
+h3{
+  font-size: 3vh;
 }

@@ -7,11 +7,12 @@ var app = angular.module("app", [
       $routeProvider.when('/editset/:userid/:subjectid/:setid/:flashcardid', {templateUrl : 'partials/editset.html', controller: "editsetCtrl"});
       $routeProvider.when('/subjects/:userid', {templateUrl : 'partials/subjects.html', controller: "subjectsCtrl"});
       $routeProvider.when('/sets/:userid/:subjectid', {templateUrl : 'partials/sets.html', controller: "setsCtrl"});
-      $routeProvider.when('/set/grid/:setid', {templateUrl : 'partials/setgrid.html', controller: "setCtrl"});
-      $routeProvider.when('/set/list/:setid', {templateUrl : 'partials/setlist.html', controller: "setCtrl"});
-      $routeProvider.when('/manual/:setid', {templateUrl : 'partials/manual.html', controller: "manualCtrl"});
-      $routeProvider.when('/multiplechoice/:setid', {templateUrl : 'partials/multiplechoice.html', controller: "multiplechoiceCtrl"});
-      $routeProvider.when('/typedanswer/:setid', {templateUrl : 'partials/typedanswer.html', controller: "typedanswerCtrl"});
+      $routeProvider.when('/set/grid/:userid/:setid', {templateUrl : 'partials/setgrid.html', controller: "setCtrl"});
+      $routeProvider.when('/set/list/:userid/:setid', {templateUrl : 'partials/setlist.html', controller: "setCtrl"});
+      $routeProvider.when('/manual/:userid/:setid/:shuffle/:unlearntonly', {templateUrl : 'partials/manual.html', controller: "manualCtrl"});
+      $routeProvider.when('/multiplechoice/:userid/:setid/:shuffle/:unlearntonly', {templateUrl : 'partials/multiplechoice.html', controller: "multiplechoiceCtrl"});
+      $routeProvider.when('/typedanswer/:userid/:setid/:shuffle/:unlearntonly', {templateUrl : 'partials/typedanswer.html', controller: "typedanswerCtrl"});
+      $routeProvider.when('/summary/:userid/:setid', {templateUrl : 'partials/summary.html', controller: "summaryCtrl"});
       $routeProvider.otherwise({templateUrl : 'partials/notfound.html'});
     }]);
 
@@ -105,7 +106,6 @@ var app = angular.module("app", [
         }
         return valid
       };
-
       var validatesignin = function(signindetails) {
         if (signindetails === undefined) {
           $scope.signinmessage.username = "Invalid username"
@@ -126,12 +126,12 @@ var app = angular.module("app", [
         var url = "http://localhost:5000/createuser/firstname="+signupdetails.firstname+"/lastname="+signupdetails.lastname+"/dob=1997-12-27/emailaddress="+signupdetails.email+"/username="+signupdetails.username+"/password="+signupdetails.password+"/"
          $http.get(url)
           .then(function(response) {
-            if (response.data === "Success") {
-              document.cookie="username="+signupdetails.username;
-              window.open('/startpage',"_self")
-            }
-            else if (response.data === "Username Taken") {
+            console.log(response.data)
+            if (response.data === "Username Taken") {
               $scope.signupmessage.username = "Username Taken"
+            } else  {
+              var userid = response.data
+              window.open("/#/start/"+userid, "_self");
             }
           });
       };
@@ -147,42 +147,113 @@ angular.module("app").controller("shellCtrl",['$scope', '$routeParams', '$http',
   }]);
 
 angular.module("app").controller("manualCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
-  $scope.flashcards = [
-    {front:"to play", back:"jugar", learnt : "true"},
-    {front:"to swim", back:"nadar", learnt : "false"},
-    {front:"to paint", back:"pintar", learnt : "true"},
-    {front:"to watch", back:"mirar", learnt : "true"},
-    {front:"to please", back:"gustar", learnt : "true"},
-    {front:"to attack", back:"atacar", learnt : "false"},
-    {front:"to take", back: "sacar", learnt : "true"},
-    {front:"to pray", back:"rezar", learnt : "false"},
-    {front:"to get up", back:"levantar", learnt : "false"},
-    {front:"to go for a walk", back:"pasear", learnt : "true"},
-    {front:"to move", back:"mudar", learnt : "true"},
-    {front:"to fix/repair", back:"arreglar", learnt : "false"},
-    {front:"to return/go back", back:"regresar", learnt : "true"},
-    {front:"to turn in", back:"entregar", learnt : "true"},
-    {front:"to enter", back:"entrar", learnt : "true"},
-    {front:"to cease/end", back:"cesar", learnt : "false"},
-    {front:"to play", back:"jugar", learnt : "true"},
-     {front:"to swim", back:"nadar", learnt : "false"},
-     {front:"to paint", back:"pintar", learnt : "true"},
-    {front:"to watch", back:"mirar", learnt : "true"},
-    {front:"to please", back:"gustar", learnt : "false"},
-    {front:"to attack", back:"atacar", learnt : "false"},
-    {front:"to take", back: "sacar", learnt : "false"},
-    {front:"to pray", back:"rezar", learnt : "true"},
-    {front:"to get up", back:"levantar", learnt : "true"},
-    {front:"to go for a walk", back:"pasear", learnt : "true"},
-    {front:"to move", back:"mudar", learnt : "true"},
-    {front:"to fix/repair/straighten up", back:"arreglar", learnt : "false"},
-    {front:"to return/go back", back:"regresar", learnt : "true"},
-    {front:"to turn in", back:"entregar", learnt : "false"},
-    {front:"to enter", back:"entrar", learnt : "true"},
-    {front:"to cease/end", back:"cesar", learnt : "true"}
- ];
 
-$scope.flashcards[0].active = "active"
+  var confirmOnPageExit = function (e)
+{
+    // If we haven't been passed the event get the window.event
+    e = e || window.event;
+
+    var message = 'Any text will block the navigation and display a prompt';
+
+    // For IE6-8 and Firefox prior to version 4
+    if (e)
+    {
+        e.returnValue = message;
+    }
+
+    // For Chrome, Safari, IE8+ and Opera 12+
+    return message;
+};
+window.onbeforeunload = confirmOnPageExit;
+
+  var userid = $routeParams.userid
+  $scope.userid = userid
+
+  var setid = $routeParams.setid
+  $scope.setid = setid
+
+  var shuffle = $routeParams.shuffle
+  var unlearntonly = $routeParams.unlearntonly
+  var grades_array = ["U","U", "U", "F", "E", "D", "C", "B", "A", "A*", "A*"];
+
+  var url = "http://localhost:5000/getlearntandtotal/setid="+setid
+  $http.get(url)
+   .then(function(response) {
+     $scope.total = response.data.total
+     $scope.learnt = response.data.learnt
+     $scope.percentage = Math.floor($scope.learnt/$scope.total*100)
+     $scope.grade = grades_array[parseInt($scope.percentage/10)]
+   });
+
+
+  var url = "http://localhost:5000/getcardstolearn/setid="+setid+"/shuffle="+shuffle+"/unlearntonly="+unlearntonly;
+
+
+
+  $http.get(url)
+   .then(function(response) {
+     $scope.flashcards = response.data
+     $scope.flashcards[0].active = "active"
+     for (i=0; i < $scope.flashcards.length; i++) {
+       if ($scope.flashcards[i].learnt === 1) {
+         $scope.flashcards[i].learnt = true
+       } else {
+         $scope.flashcards[i].learnt = false
+       }
+       }
+     });
+    $scope.changelearnt = function(card){
+      var url = "http://localhost:5000/changelearnt/flashcardid="+card.flashcardid+"/learnt="+card.learnt
+      $http.get(url).then(function(response) {
+        var url = "http://localhost:5000/getlearntandtotal/setid="+setid
+        $http.get(url)
+         .then(function(response) {
+           $scope.total = response.data.total
+           $scope.learnt = response.data.learnt
+           $scope.percentage = Math.floor($scope.learnt/$scope.total*100)
+           $scope.grade = grades_array[parseInt($scope.percentage/10)]
+         });
+    });
+  };
+
+
+
+ //  $scope.flashcards = [
+ //    {front:"to play", back:"jugar", learnt : "true"},
+ //    {front:"to swim", back:"nadar", learnt : "false"},
+ //    {front:"to paint", back:"pintar", learnt : "true"},
+ //    {front:"to watch", back:"mirar", learnt : "true"},
+ //    {front:"to please", back:"gustar", learnt : "true"},
+ //    {front:"to attack", back:"atacar", learnt : "false"},
+ //    {front:"to take", back: "sacar", learnt : "true"},
+ //    {front:"to pray", back:"rezar", learnt : "false"},
+ //    {front:"to get up", back:"levantar", learnt : "false"},
+ //    {front:"to go for a walk", back:"pasear", learnt : "true"},
+ //    {front:"to move", back:"mudar", learnt : "true"},
+ //    {front:"to fix/repair", back:"arreglar", learnt : "false"},
+ //    {front:"to return/go back", back:"regresar", learnt : "true"},
+ //    {front:"to turn in", back:"entregar", learnt : "true"},
+ //    {front:"to enter", back:"entrar", learnt : "true"},
+ //    {front:"to cease/end", back:"cesar", learnt : "false"},
+ //    {front:"to play", back:"jugar", learnt : "true"},
+ //     {front:"to swim", back:"nadar", learnt : "false"},
+ //     {front:"to paint", back:"pintar", learnt : "true"},
+ //    {front:"to watch", back:"mirar", learnt : "true"},
+ //    {front:"to please", back:"gustar", learnt : "false"},
+ //    {front:"to attack", back:"atacar", learnt : "false"},
+ //    {front:"to take", back: "sacar", learnt : "false"},
+ //    {front:"to pray", back:"rezar", learnt : "true"},
+ //    {front:"to get up", back:"levantar", learnt : "true"},
+ //    {front:"to go for a walk", back:"pasear", learnt : "true"},
+ //    {front:"to move", back:"mudar", learnt : "true"},
+ //    {front:"to fix/repair/straighten up", back:"arreglar", learnt : "false"},
+ //    {front:"to return/go back", back:"regresar", learnt : "true"},
+ //    {front:"to turn in", back:"entregar", learnt : "false"},
+ //    {front:"to enter", back:"entrar", learnt : "true"},
+ //    {front:"to cease/end", back:"cesar", learnt : "true"}
+ // ];
+
+
 
     }]);
 
@@ -237,17 +308,75 @@ angular.module("app").controller("startCtrl",['$scope', '$routeParams', '$http',
    });
   }]);
 
+
 angular.module("app").controller("newsetCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
-  $scope.subjects = [
-    "Computing",
-    "Maths",
-    "Physics",
-    "Spanish"
-  ];
-    }]);
+  var userid = $routeParams.userid
+  $scope.userid = $routeParams.userid
+  var url = "http://localhost:5000/getsubjects/userid="+userid
+  $http.get(url)
+   .then(function(response) {
+     $scope.subjects = response.data
+   });
+
+  $scope.addcards = function(setdetails){
+    //format date into YYYY-MM-DD as required for db
+    formatteddate = setdetails.examdate.getFullYear()+"-"+setdetails.examdate.getMonth()+"-"+setdetails.examdate.getDate()
+    //url of dbquery api to create new set
+    url = "http://localhost:5000/createset/subjectid="+setdetails.subject+"/name="+setdetails.name+"/examdate="+formatteddate
+    $http.get(url)
+     .then(function(response) {
+       console.log(response.data)
+       //open edit set with new set: response.data = setid of new set
+       window.open("/#/editset/"+userid+"/"+setdetails.subject+"/"+response.data, "_self");
+      });
+};
+      }]);
 
 
 angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
+  var userid = $routeParams.userid
+  var subjectid = $routeParams.subjectid
+  var setid = $routeParams.setid
+  var flashcardid = $routeParams.flashcardid
+  var url = "http://localhost:5000/getflashcard/setid="+setid+"/flashcardid="+flashcardid
+   $http.get(url)
+    .then(function(response) {
+      $scope.carddetails = response.data
+      $scope.carddetails.cardtype = (parseInt($scope.carddetails.typeid) - 1).toString()
+
+      var url = "http://localhost:5000/getcardsetdetails/subjectid="+subjectid+"/setid="+setid+"/flashcardid="+flashcardid
+      $http.get(url)
+       .then(function(response) {
+         $scope.cardsetdetails = response.data
+         console.log($scope.cardsetdetails.nextid)
+        });
+    });
+
+    $scope.nextcard = function(carddetails) {
+      carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
+      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front+"/back="+carddetails.back+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+      $http.get(url).then(function(response) {
+        window.open("/#/editset/"+userid+"/"+subjectid+"/"+setid+"/"+$scope.cardsetdetails.nextid, "_self");
+      });
+    }
+
+    $scope.previouscard = function(carddetails) {
+      carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
+      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front+"/back="+carddetails.back+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+      $http.get(url).then(function(response) {
+        window.open("/#/editset/"+userid+"/"+subjectid+"/"+setid+"/"+$scope.cardsetdetails.previd, "_self");
+      });
+    }
+
+    $scope.save = function(carddetails) {
+      carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
+      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front+"/back="+carddetails.back+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+      $http.get(url).then(function(response) {
+        window.open("/#/start/"+userid, "_self");
+      });
+    }
+
+
   $scope.autoDefine =  function(front, type) {
       if (type === "0"){
           $scope.select = function(selected){
@@ -255,8 +384,6 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
           };
         $scope.definitions_title = "Searching Dictionairy..."
         $scope.wikipedia_title = "Searching Wikipedia..."
-        $scope.articles = []
-        $scope.definitons = []
         $('#autoDefine').modal({
             show: 'true'
           });
@@ -328,47 +455,61 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
     }]);
 
 angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
+  var userid = $routeParams.userid
+  var setid = $routeParams.setid
+  $scope.userid = $routeParams.userid
+  $scope.setid = $routeParams.setid
 
+  $scope.path = userid+"/"+setid
+  var url = "http://localhost:5000/getsetdetails/setid="+setid
+  $http.get(url)
+   .then(function(response) {
+     var url = "http://localhost:5000/getsubjectdetails/subjectid="+response.data.subjectid
+     $http.get(url)
+      .then(function(response) {
+        $scope.subject = response.data
+      });
+      $scope.set = response.data
+      $scope.flashcards = response.data.cards
 
+ //  $scope.set = {name : "Essential Verbs",
+ //                subject : "Spanish"};
+ //  $scope.flashcards = [
+ //    {front:"to play", back:"jugar", learnt : "true"},
+ //    {front:"to swim", back:"nadar", learnt : "false"},
+ //    {front:"to paint", back:"pintar", learnt : "true"},
+ //    {front:"to watch", back:"mirar", learnt : "true"},
+ //    {front:"to please", back:"gustar", learnt : "true"},
+ //    {front:"to attack", back:"atacar", learnt : "false"},
+ //    {front:"to take", back: "sacar", learnt : "true"},
+ //    {front:"to pray", back:"rezar", learnt : "false"},
+ //    {front:"to get up", back:"levantar", learnt : "false"},
+ //    {front:"to go for a walk", back:"pasear", learnt : "true"},
+ //    {front:"to move", back:"mudar", learnt : "true"},
+ //    {front:"to fix/repair", back:"arreglar", learnt : "false"},
+ //    {front:"to return/go back", back:"regresar", learnt : "true"},
+ //    {front:"to turn in", back:"entregar", learnt : "true"},
+ //    {front:"to enter", back:"entrar", learnt : "true"},
+ //    {front:"to cease/end", back:"cesar", learnt : "false"},
+ //    {front:"to play", back:"jugar", learnt : "true"},
+ //     {front:"to swim", back:"nadar", learnt : "false"},
+ //     {front:"to paint", back:"pintar", learnt : "true"},
+ //    {front:"to watch", back:"mirar", learnt : "true"},
+ //    {front:"to please", back:"gustar", learnt : "false"},
+ //    {front:"to attack", back:"atacar", learnt : "false"},
+ //    {front:"to take", back: "sacar", learnt : "false"},
+ //    {front:"to pray", back:"rezar", learnt : "true"},
+ //    {front:"to get up", back:"levantar", learnt : "true"},
+ //    {front:"to go for a walk", back:"pasear", learnt : "true"},
+ //    {front:"to move", back:"mudar", learnt : "true"},
+ //    {front:"to fix/repair/straighten up", back:"arreglar", learnt : "false"},
+ //    {front:"to return/go back", back:"regresar", learnt : "true"},
+ //    {front:"to turn in", back:"entregar", learnt : "false"},
+ //    {front:"to enter", back:"entrar", learnt : "true"},
+ //    {front:"to cease/end", back:"cesar", learnt : "true"}
+ // ];
 
-  $scope.set = {name : "Essential Verbs",
-                subject : "Spanish"};
-  $scope.flashcards = [
-    {front:"to play", back:"jugar", learnt : "true"},
-    {front:"to swim", back:"nadar", learnt : "false"},
-    {front:"to paint", back:"pintar", learnt : "true"},
-    {front:"to watch", back:"mirar", learnt : "true"},
-    {front:"to please", back:"gustar", learnt : "true"},
-    {front:"to attack", back:"atacar", learnt : "false"},
-    {front:"to take", back: "sacar", learnt : "true"},
-    {front:"to pray", back:"rezar", learnt : "false"},
-    {front:"to get up", back:"levantar", learnt : "false"},
-    {front:"to go for a walk", back:"pasear", learnt : "true"},
-    {front:"to move", back:"mudar", learnt : "true"},
-    {front:"to fix/repair", back:"arreglar", learnt : "false"},
-    {front:"to return/go back", back:"regresar", learnt : "true"},
-    {front:"to turn in", back:"entregar", learnt : "true"},
-    {front:"to enter", back:"entrar", learnt : "true"},
-    {front:"to cease/end", back:"cesar", learnt : "false"},
-    {front:"to play", back:"jugar", learnt : "true"},
-     {front:"to swim", back:"nadar", learnt : "false"},
-     {front:"to paint", back:"pintar", learnt : "true"},
-    {front:"to watch", back:"mirar", learnt : "true"},
-    {front:"to please", back:"gustar", learnt : "false"},
-    {front:"to attack", back:"atacar", learnt : "false"},
-    {front:"to take", back: "sacar", learnt : "false"},
-    {front:"to pray", back:"rezar", learnt : "true"},
-    {front:"to get up", back:"levantar", learnt : "true"},
-    {front:"to go for a walk", back:"pasear", learnt : "true"},
-    {front:"to move", back:"mudar", learnt : "true"},
-    {front:"to fix/repair/straighten up", back:"arreglar", learnt : "false"},
-    {front:"to return/go back", back:"regresar", learnt : "true"},
-    {front:"to turn in", back:"entregar", learnt : "false"},
-    {front:"to enter", back:"entrar", learnt : "true"},
-    {front:"to cease/end", back:"cesar", learnt : "true"}
- ];
-
- var size_list = ["50px", "40px", "33px", "25px", "20px"]
+ var size_list = ["45px", "35px", "30px", "20px", "15px"]
  var max_list = [18, 22, 40, 54, 108]
 
  $scope.learnt = 0
@@ -376,7 +517,7 @@ angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', f
 
  for (i in $scope.flashcards){
    $scope.total += 1
-   if ($scope.flashcards[i].learnt === "true"){
+   if ($scope.flashcards[i].learnt === 1){
      $scope.learnt += 1
      $scope.flashcards[i].icon = "glyphicon glyphicon-ok icon-success"
      $scope.flashcards[i].bg = "success"
@@ -394,9 +535,49 @@ angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', f
       idx += 1
     }
      $scope.flashcards[i].backsize = size_list[idx]
+    if ($scope.flashcards[i].grade === "None"){
+      $scope.flashcards[i].gradegrid = ""
+    } else {
+      $scope.flashcards[i].gradegrid = $scope.flashcards[i].grade
+    }
  };
  $scope.percentage = Math.floor($scope.learnt/$scope.total*100)
 
+ $scope.session = {learnmethod : "0", shuffle : false, learntonly : false}
+ $scope.startsession = function (sessiondetails) {
+   var path = "/#/"
+   if (sessiondetails.learnmethod === "0") {
+     path += "manual/"+userid+"/"+setid
+   } else if (sessiondetails.learnmethod === "1") {
+     path += "multiplechoice/"+userid+"/"+setid
+   } else {
+     path += "typedanswer/"+userid+"/"+setid
+   }
+
+   if (sessiondetails.shuffle) {
+    path += "/1"
+  } else{
+    path += "/0"
+  }
+
+  if (sessiondetails.learntonly) {
+   path += "/1"
+ } else{
+   path += "/0"
+ }
+
+
+   window.open(path, "_self");
+ }
+ });
+ $scope.editset = function(userid, subjectid, setid){
+   var url = "http://localhost:5000/getfirstcard/setid="+setid
+   $http.get(url)
+    .then(function(response) {
+      var firstcardid = response.data
+      window.open("/#/editset/"+userid+"/"+subjectid+"/"+setid+"/"+firstcardid, "_self");
+    });
+ };
     }]);
 
 angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
@@ -413,8 +594,12 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
     {id: "10", name : "History", image : "images/subjects/History.png", learnt : 355, total : 376}
   ];*/
 
+
   var userid = $routeParams.userid;
   $scope.userid = userid
+  var url = "http://localhost:5000/getlearntandtotaluser/userid="+userid
+  $http.get(url).then(function(response) {
+
   var url = "http://localhost:5000/getsubjects/userid="+userid+"/"
    $http.get(url).then(function(response) {
      // success
@@ -437,6 +622,7 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
         $scope.subjects[i].image = "images/subjects/"+$scope.subjects[i].image
       }
       $scope.overall.percentage = Math.floor(($scope.overall.learnt/$scope.overall.total)*100)
+      });
       });
       $scope.subjectimages = [
         "images/subjects/Other.png",
@@ -466,16 +652,18 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
       ];
 
       $scope.createSubject = function(subjectdetails) {
+        //remove path from image name
         subjectdetails.image = subjectdetails.image.replace("images/subjects/","")
+        //db query url for create subject url
         var url = "http://localhost:5000/createsubject/userid="+userid+"/name="+subjectdetails.name+"/image="+subjectdetails.image+"/"
         $http.get(url).then(function(response) {
-          // success
-           console.log(response.data)
+          // on success reload the page to display added set
            window.location.reload()
          });
-
       };
     }]);
+
+
 
     angular.module("app").controller("multiplechoiceCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
       $scope.flashcards = [
@@ -529,15 +717,60 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
     $scope.incorrect = 0
         }]);
 
+angular.module("app").controller("summaryCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
+  $scope.setid = $routeParams.setid
+  var setid = $routeParams.setid
+  $scope.userid = $routeParams.userid
+  var userid = $routeParams.userid
+  var url = "http://localhost:5000/getlearntandtotal/setid="+$routeParams.setid
+  $http.get(url).then(function(response) {
+    var url = "http://localhost:5000/getsetdetails/setid="+$routeParams.setid
+    $http.get(url).then(function(response) {
+      $scope.set = response.data
+      $scope.set.percentage = Math.floor($scope.set.learnt/$scope.set.total*100)
+      $scope.set.unlearnt = $scope.set.total - $scope.set.learnt
+      var url = "http://localhost:5000/getsubjectdetails/subjectid="+$scope.set.subjectid
+      $http.get(url).then(function(response) {
+        $scope.subject = response.data
+
+      });
+    });
+  });
+  $scope.session = {learnmethod : "0", shuffle : false, learntonly : false}
+  $scope.startsession = function (sessiondetails) {
+    var path = "/#/"
+    if (sessiondetails.learnmethod === "0") {
+      path += "manual/"+userid+"/"+setid
+    } else if (sessiondetails.learnmethod === "1") {
+      path += "multiplechoice/"+userid+"/"+setid
+    } else {
+      path += "typedanswer/"+userid+"/"+setid
+    }
+
+    if (sessiondetails.shuffle) {
+     path += "/1"
+   } else{
+     path += "/0"
+   }
+
+   if (sessiondetails.learntonly) {
+    path += "/1"
+  } else{
+    path += "/0"
+  }
+    window.open(path, "_self");
+  }
+
+  }]);
+
 angular.module("app").controller("setsCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
-  $scope.subject = "Computing"
-  /*$scope.sets = [
-    {id: "1", name : "Chapter 1", image : "images/subjects/Computing.png", learnt : 234, total : 323},
-    {id: "2", name : "Chapter 2", image : "images/subjects/Computing.png", learnt : 146, total :147},
-    {id: "3", name : "Chapter 3", image : "images/subjects/Computing.png", learnt : 12, total : 286},
-    {id: "4", name : "Chapter 4", image : "images/subjects/Computing.png", learnt : 198, total : 243},
-    {id: "5", name : "Chapter 5", image : "images/subjects/Computing.png", learnt : 23, total : 53},
-  ];*/
+  $scope.userid = $routeParams.userid
+
+  var url = "http://localhost:5000/getsubjectdetails/subjectid="+$routeParams.subjectid
+  $http.get(url).then(function(response) {
+    $scope.subject = response.data
+
+  });
   $scope.userid = $routeParams.userid
   var sort_by = function(field, reverse, primer){
 
@@ -594,16 +827,27 @@ angular.module("app").controller("setsCtrl",['$scope', '$routeParams', '$http', 
     var setAmount = $scope.sets.length;
 
     var grades_array = ["U","U", "U", "F", "E", "D", "C", "B", "A", "A*", "A*"];
-
+    $scope.updatesort($scope.sortby)
     for (i = 0; i < setAmount; i++){
+      var url = "http://localhost:5000/getlearntandtotal/setid="+$scope.sets[i].setid
+      $http.get(url)
+      if ($scope.sets[i].total === "0"){
+        $scope.sets[i].percentage = 0
+      } else {
       $scope.sets[i].percentage = Math.floor((parseInt($scope.sets[i].learnt)/parseInt($scope.sets[i].total))*100)
+    }
       $scope.overall.learnt += parseInt($scope.sets[i].learnt);
       $scope.overall.total += parseInt($scope.sets[i].total);
+      if ($scope.sets[i].percentage === 0) {
+        $scope.sets[i].grade = "U"
+      } else {
       $scope.sets[i].grade = grades_array[parseInt($scope.sets[i].percentage/10)]
+    }
     }
 
     $scope.setAmount = setAmount
 
     $scope.overall.percentage = Math.floor(($scope.overall.learnt/$scope.overall.total)*100)
   });
+
     }]);
