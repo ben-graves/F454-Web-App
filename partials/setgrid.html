@@ -1,15 +1,25 @@
+<head>
+  <title>Set - {{set.name}}</title>
+</head>
+<!--Navbar-->
 <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
+      <!--Toggle navigation button on mobile version-->
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
       </button>
-      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "#"><p>
+        <img class="logo" src="images/logowhite.png" />
+        <img class="logo hover" src="images/logoblack.png" />
+        E-Flashcards</p>
+      </a>
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
+        <!--Buttons - unique to page-->
         <li ><a  class="nav-button" href="/#/start/{{userid}}">Start</a></li>
         <li><a class="nav-button" href="/#/newset/{{userid}}">New Set</a></li>
         <li><a class="nav-button active"> Set - {{set.name}}</a></li>
@@ -22,47 +32,66 @@
 <main>
   <div class = "container">
     <div class = "row">
-    <header>
-        <div class = "page-header col-xs-6 col-sm-8 col-md-10">
-          <h1><img  src="/images/subjects/{{subject.image}}" alt="/images/subjects/Other.png" width=70px> {{set.name}}<small> {{subject.name}}</h1>
-        </div>
-    </header>
-        <div class="view-change col-xs-6 col-sm-4 col-md-2">
-          <a href="/#/set/list/{{path}}">
-          <img  src = "images/list-square.png" height="100" width="100">
-        </a>
-        </div>
+      <header>
+          <div class = "page-header col-xs-6 col-sm-8 col-md-10">
+            <h1><img  src="/images/subjects/{{subject.image}}" alt="/images/subjects/Other.png" width=70px> {{set.name}}<small> <a href="/#/sets/{{userid}}/{{set.subjectid}}">{{subject.name}}</a></small></h1>
+          </div>
+      </header>
+      <!--View change button - link to list page-->
+      <div class="view-change col-xs-6 col-sm-4 col-md-2">
+        <a href="/#/set/list/{{path}}">
+        <img src = "images/list-square.png" height="100" width="100">
+      </a>
       </div>
+    </div>
   </div>
   <div class="container">
     <div class = "row">
       <div class="col-xs-6 col-sm-8">
-        <h3>{{learnt}}/{{total}} Cards Learnt | <div class = "visible-xs-inline"><br></div>Current Grade <strong>C</strong> | <div class = "visible-xs-inline"><br></div>Exam Date <strong>13/06/16</strong> |</h3>
+        <h3>{{learnt}}/{{total}} Cards Learnt | <div class = "visible-xs-inline"><br></div>Current Grade <strong>{{set.predicted_grade}}</strong> | <div class = "visible-xs-inline"><br></div>Exam Date <strong>{{set.examdate}}</strong> |</h3>
       </div>
       <div class="col-xs-6 col-md-4 align-right" style="float:right; text-align: right;">
         <br>
+        <!--Option buttons-->
         <div class="btn-group" role="group">
           <button data-toggle="modal" data-target="#learn" class="btn btn-success"><div class = "visible-lg-inline visible-md-inline">Learn</div>
             <span class="glyphicon glyphicon-education" aria-hidden="true"></span>
             <span class="sr-only">Complete</span>
           </button>
-          <button ng-click="updateItem(item)" class="btn btn-warning"><div class = "visible-lg-inline visible-md-inline">Edit</div>
+          <button ng-click="editset()" class="btn btn-warning"><div class = "visible-lg-inline visible-md-inline">Edit</div>
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
             <span class="sr-only">Edit</span>
           </button>
-          <button ng-click="removeItem(item)" class="btn btn-danger"><div class = "visible-lg-inline visible-md-inline">Delete</div>
+          <button data-toggle="alert" data-target="#deletealert" class="btn btn-danger"><div class = "visible-lg-inline visible-md-inline" id="show-section1" value="Show/Hide Back" ng-click="section1=!section1">Delete</div>
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             <span class="sr-only">Remove</span>
           </button>
         </div>
       </div>
     </div>
-    <div class="progress">
-      <div class="progress-bar progress-bar-success" style="width: {{percentage}}%; min-width: 2em;">
-        {{percentage}}%
-      </div>
+    <!--Alert to confirm that the user is sure if they click the delete set button-->
+    <section id="section1" ng-show="section1">
+      <div class="alert alert-danger alert-dismissible" id="deletealert" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Warning!</strong> Are you sure you want to delete this set?
+      <button type="button" data-dismiss="alert" class="btn btn-success">No, I Want To Keep It  it
+        <span class="glyphicon " aria-hidden="true"></span>
+      </button>
+      <button ng-click="deleteset(set.setid)" class="btn btn-danger">Yes, I Want To Delete it
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+      </button>
     </div>
-    <!--<div class="row">-->
+  </section>
+  <div class="progress">
+    <div class="progress-bar progress-bar-success" style="width: {{percentage}}%; min-width: 2em;">
+      {{percentage}}%
+    </div>
+  </div>
+      <!--display flashcards in grid:
+      lg screen: 4 cards wide
+      md screen: 3 cards wide
+      sm screen: 2 cards wide
+      xs screen; 1 card wide-->
       <div ng-repeat="flashcard in flashcards" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <div class="thumbnail" ng-click="selectflashcard(flashcard.id)">
           <center><div class="side" style="font-size : {{flashcard.frontsize}};">
@@ -72,24 +101,24 @@
             <center>{{flashcard.back}}</center>
           </div></center>
           <div align="right" class="bottom-tab {{flashcard.bg}}">
-             {{flashcard.gradegrid}}<span class={{flashcard.icon}} aria-hidden="true"></span>
+             {{flashcard.gradegrid}} <span class={{flashcard.icon}} aria-hidden="true"></span>
           </div>
         </div>
       </div>
-
-    <--</div>-->
+    </div>
   </div>
+  <!--Learn set pop-up box-->
   <div class="modal fade" id="learn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header-green">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Learn Set</h4>
+          <h1 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-education" aria-hidden="true"></span> Learn Set</h1>
         </div>
         <div class="modal-body">
           <form>
             <div class="btn-group" id="#methodRadio">
-              <h3>Method</h3>
+              <h3>Select Your Method</h3>
               <label class="radio-inline"><input type="radio" name="optradio" data-ng-model="session.learnmethod" value="0">Manual Testing</label>
               <label class="radio-inline"><input type="radio" name="optradio" data-ng-model="session.learnmethod" value="1"> Multiple Choice</label>
               <label class="radio-inline"><input type="radio" name="optradio" data-ng-model="session.learnmethod" value="2"> Typed Answer</label>
@@ -101,7 +130,7 @@
           </div>
           <div class="checkbox">
           <label>
-            <input type="checkbox" ng-model="session.learntonly"> Learnt Cards Only
+            <input type="checkbox" ng-model="session.unlearntonly"> Not Learnt Cards Only
           </label>
         </div>
           </form>

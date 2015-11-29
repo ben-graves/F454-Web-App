@@ -1,15 +1,25 @@
+<head>
+  <title>Subject - {{subject.name}}</title>
+</head>
+<!--Navbar-->
 <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
+      <!--Toggle navigation button on mobile version-->
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
       </button>
-      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "#"><p>
+        <img class="logo" src="images/logowhite.png" />
+        <img class="logo hover" src="images/logoblack.png" />
+        E-Flashcards</p>
+      </a>
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
+        <!--Buttons - unique to page-->
         <li ><a  class="nav-button" href="/#/start/{{userid}}">Start</a></li>
         <li><a class="nav-button" href="/#/newset/{{userid}}">New Set</a></li>
         <li><a class="nav-button active" > Subject - {{subject.name}}</a></li>
@@ -46,10 +56,16 @@
     <div class="col-xs-3  nopadding" ><button type="button" class="btn btn-primary" ng-click="updatesort(sortby)">Update</button></div>
   </div>
     <div class="row">
+      <!--Display sets in grid view
+      lg screen: 4 set wide
+      md screen: 3 set wide
+      sm screen: 2 set wide
+      xs screen; 1 set wide-->
       <div ng-repeat="set in sets" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <div class="thumbnail" ng-click="selectSet(set.id)">
           <a href="/#/set/grid/{{userid}}/{{set.setid}}">
-            <center><div class="grade">{{set.grade}}</div></center>
+            <!--main emphasis of set option is the current grade-->
+            <center><div class="grade">{{set.predicted_grade}}</div></center>
             <div class="caption">
               <h3>{{set.name}}<br>
                 <small>{{set.learnt}}/{{set.total}} Cards Learnt<br>Exam : {{set.examdate}}</small>
@@ -58,11 +74,6 @@
                 <div class="progress-bar progress-bar-success" style="width: {{set.percentage}}%; min-width: 2em;">
                   {{set.percentage}}%
                 </div>
-                  <!--
-                  <div class="progress-bar progress-bar-danger" style="width: 25%">
-                    25%
-                  </div>
-                -->
               </div>
             </div>
           </a>
@@ -71,8 +82,8 @@
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" >
         <div class="thumbnail not-there">
           <a href="/#/newset/{{userid}}">
-            <img id="subjectimg" src="images/add.png" width=200px>
-            <h3 class = "text-center">New Set</h3>
+            <img id="subjectimg" src="images/add.png" width=100%>
+            <h3 class = "text-center">New Set</h3><br><br><br>
           </newset>
         </div>
       </div>

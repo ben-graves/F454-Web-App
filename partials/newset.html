@@ -1,15 +1,25 @@
+<head>
+  <title>Create New Set</title>
+</head>
+<!--Navbar-->
 <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
+      <!--Toggle navigation button on mobile version-->
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
       </button>
-      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "#"><p>
+        <img class="logo" src="images/logowhite.png" />
+        <img class="logo hover" src="images/logoblack.png" />
+        E-Flashcards</p>
+      </a>
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
+        <!--Buttons - unique to page-->
         <li ><a  class="nav-button" href="/#/start/{{userid}}">Start</a></li>
         <li><a class="nav-button active" href="/#/newset/{{userid}}">New Set</a></li>
         <li><a class="nav-button" href="/#/subjects/{{userid}}">Subjects</a></li>
@@ -26,46 +36,38 @@
     </header>
   </div>
   <div class="container">
-      <div class="col-sm-offset-3 col-sm-9">
-        <form name="NewSetForm" class = "form-horizontal" >
-          <div class="row">
-            <div class="col-sm-offset-2 col-sm10s">
-              <h2>Set Details</h2>
+    <div class="col-sm-offset-3 col-sm-9">
+      <!--New set form to get details of new set-->
+      <form name="NewSetForm" class = "form-horizontal" >
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm10s">
+            <h2>Set Details</h2>
+          </div>
+        </div>
+          <div class="form-group">
+            <div class="row">
+              <label class="control-label col-sm-2"for="settitle">Title</label>
+              <div class="col-sm-6">
+                <input type="text" name="settitle" ng-model="setdetails.name" id="title" class="form-control" placeholder="Enter set title">
+              </div>
+            </div>
+            <div class="row">
+              <label class="control-label col-sm-2"for="subject">Subject</label>
+              <div class="col-sm-4">
+                <select class="form-control" id="subject" ng-model="setdetails.subject">
+                  <option ng-model= "setdetails.subjectid" ng-repeat="subject in subjects" value={{subject.subjectid}}>{{subject.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <label  class="control-label col-sm-2" for="examdate">Exam Date</label>
+              <div class="col-sm-3">
+                <input ng-model= "setdetails.examdate" type='date' class="form-control">
+              </div>
             </div>
           </div>
-            <div class="form-group">
-              <div class="row">
-                <label class="control-label col-sm-2"for="settitle">Title</label>
-                <div class="col-sm-6">
-                  <input type="text" name="settitle" ng-model="setdetails.name" id="title" class="form-control" placeholder="Enter set title">
-                </div>
-                <div class="col-sm-4 errormessage">
-                  <!--<p>{{errormessage.title}}</p>-->
-                </div>
-              </div>
-              <div class="row">
-                <label class="control-label col-sm-2"for="subject">Subject</label>
-                <div class="col-sm-4">
-                  <select class="form-control" id="subject" ng-model="setdetails.subject">
-                    <option ng-model= "setdetails.subjectid" ng-repeat="subject in subjects" value={{subject.subjectid}}>{{subject.name}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-2 errormessage">
-                  <!--<p>{{errormessage.subject}}</p>-->
-                </div>
-              </div>
-              <div class="row">
-                <label  class="control-label col-sm-2" for="examdate">Exam Date</label>
-                <div class="col-sm-3">
-                  <input ng-model= "setdetails.examdate" type='date' class="form-control">
-                </div>
-                <div class="col-sm-5 errormessage">
-                  <!--<p>{{errormessage.exasmate}}</p>-->
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
+        </form>
+      </div>
       <div class="col-sm-offset-8 col-sm-1">
         <button ng-click = "addcards(setdetails)" align = "right" class="btn btn-primary">Add Cards</button>
       </div>

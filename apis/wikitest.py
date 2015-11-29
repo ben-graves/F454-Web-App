@@ -8,34 +8,7 @@ import goslate
 
 app = Flask(__name__)
 
-@app.route("/search/term=<term>/")
-def search(term):
-    try:
-        wikipedia.summary(term)
-        results = wikipedia.search(term)
-    except Exception as e:
-        results = str(e)
-        results = results.split("\n")
-        results.pop()
-        results.pop(0)
-    if len(results) > 15:
-        results = results[:15]
-    for i in range(len(results)-1):
-        if "(disambiguation)" in results[i]:
-            results.pop(i)
-
-    return json.dumps(results)
-
-
-@app.route("/define/term=<term>/sentences=<sentences>")
-def define(term, sentences):
-    try:
-        to_return = wikipedia.summary(term, sentences = sentences)
-    except:
-        to_return = wikipedia.summary(wikipedia.suggest(term), sentences = sentences)
-    return to_return
-
-
+#API to get the first sentance of wikipedia articles, their titles and their links
 @app.route("/titleandarticle/term=<term>/")
 def titleandarticle (term):
     results = []
@@ -76,20 +49,26 @@ def titleandarticle (term):
 
     return json.dumps(dict_list)
 
+#get definitions of term
 @app.route("/definitions/term=<term>/")
 def definitions(term):
+    #URL for wordnik API
     API_URL = "http://api.wordnik.com:80/v4/word.json/"+term.lower()+"/definitions?limit=20&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
 
     data = requests.get(API_URL)
 
+    #convert to python list
     data_list = data.json()
     definitions_list = []
+    #extract text from response
     for definition in data_list:
         definitions_list.append(definition["text"])
     return json.dumps(definitions_list)
 
+#get translation of term, from one language to another
 @app.route("/translate/term=<term>/langfrom=<langfrom>/langto=<langto>/")
 def translate(term, langfrom, langto):
+    #use goslate API to get translation
     gs = goslate.Goslate()
     translation =(gs.translate(term, source_language = langfrom, target_language = langto))
     return translation

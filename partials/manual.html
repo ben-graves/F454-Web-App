@@ -1,6 +1,11 @@
+<head>
+  <title>Manual Testing - {{set.name}}</title>
+</head>
+<!--Navbar-->
 <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
+      <!--Toggle navigation button on mobile version-->
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
@@ -10,6 +15,7 @@
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
+        <!--Buttons - unique to page-->
         <li ><a  class="nav-button" href="/#/start/{{userid}}">Start</a></li>
         <li><a class="nav-button" href="/#/newset/{{userid}}">New Set</a></li>
         <li><a class="nav-button active" >Learn Set</a></li>
@@ -29,20 +35,21 @@
   <div class="container">
     <div class = "row">
       <div class="col-xs-6 col-sm-8 col-md-10">
-        <h3>{{learnt}}/{{total}} Cards Learnt | Current Grade <strong>{{grade}}</strong> | Exam Date <strong>13/06/16</strong></h3>
+        <h3>{{learnt}}/{{total}} Cards Learnt | Current Grade <strong>{{set.predicted_grade}}</strong> | Exam Date <strong>{{set.examdate}}</strong></h3>
       </div>
     </div>
     <div class="progress">
-      <div class="progress-bar progress-bar-success" style="width: {{percentage}}%">
+      <!--Green progress bar min width prevents it from getting too small if percentage is 0-->
+      <div class="progress-bar progress-bar-success" style="width: {{percentage}}% min-width: 2em;">
         {{percentage}}%
       </div>
     </div>
-  <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
-      <!-- Carousel indicators -->
+    <!--Bootstrap Carousel to contain flashcards-->
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+      <!--Carousel indicators - dots at bottmom of carousel to navigate slides-->
       <ol class="carousel-indicators">
         <li  ng-repeat="card in flashcards" data-target="#myCarousel" data-slide-to={{$index}} class={{card.active}}></li>
       </ol>
-      <!-- Wrapper for carousel items -->
       <div class="carousel-inner">
         <div ng-repeat="card in flashcards" class="item thumbnail flashcard {{card.active}}">
             <div class="half">
@@ -52,9 +59,9 @@
                     <input class = "btn" style="font-size:15px;" type="button" id="show-section1" value="Show/Hide Back" ng-click="section1=!section1" />
                   </form>
                 </div>
-                <div class="col-xs-6" align="right">
-                  <h2 class="nopadding">{{card.grade}}</h2>
-                </div>
+                <h1 align="right" class="nopadding col-xs-4">{{card.grade}}&nbsp;&nbsp;</h1>
+                <img class="findoutmoreleft col-xs-1" ng-click="wiki(card.front)" src="images/wikipedia.png" width=90%></img>
+                <img class="findoutmoreright  col-xs-1" ng-click="search(card.front)" src="images/search.png" width=90%></img>
               </div>
               <center>{{card.front}}</center>
             </div>
@@ -65,8 +72,9 @@
               </section>
             </div>
           </div>
+          <!--Link to summary page-->
           <div class="item thumbnail flashcard">
-            <center><h1>Testing Compltete<br><a href="/#/summary/{{userid}}/{{setid}}">View summary</a></h1></center>
+            <center><h1>Testing Complete<br><a href="/#/summary/{{userid}}/{{setid}}">View summary</a></h1></center>
           </div>
         </div>
       <!-- Carousel controls -->

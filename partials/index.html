@@ -1,12 +1,15 @@
+<head>
+  <title>E-flashcards - Welcome</title>
+</head>
+<!--Navbar-->
 <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class = "icon-bar"></span>
-        <span class = "icon-bar"></span>
-        <span class = "icon-bar"></span>
-      </button>
-      <a class = "navbar-brand"  href = "#"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "#"><p>
+        <img class="logo" src="images/logowhite.png" />
+        <img class="logo hover" src="images/logoblack.png" />
+        E-Flashcards</p>
+      </a>
     </div>
   </div>
 </div>
@@ -21,6 +24,7 @@
   <div class="container">
       <div class="row">
         <div class="col-md-6">
+          <!--Sign In Form-->
           <form name="SignInForm" class = "form-horizontal">
             <h2>Sign In</h2>
             <div class="form-group">
@@ -47,21 +51,19 @@
           </form>
         </div>
         <div class="col-md-6">
+          <!--Sign Up Form-->
           <form novalidate name="SignUpForm" class = "form-horizontal">
             <h2>Sign Up</h2>
             <div id = "emailbox" class="form-group has-feedback">
               <label class="control-label col-md-3" for="email">Email Address</label>
               <div class="col-md-5">
                 <input type="email" name="email" ng-model="signupdetails.email" id="email" class="form-control" placeholder="Enter email address">
-                <span id = "emailicon" aria-hidden="true"></span>
-                <span id="inputError2Status" class="sr-only">(error)</span>
-                <span id="inputSuccess2Status" class="sr-only">(success)</span>
               </div>
               <div class="col-md-4 errormessage">
                 <p>{{signupmessage.email}}</p>
               </div>
             </div>
-            <div class="form-group">
+            <div id = "firstnamebox" class="form-group has-feedback">
               <label class="control-label col-md-3" for="firstname">First Name</label>
               <div class="col-md-4">
                 <input type="text" name="firstname" ng-model="signupdetails.firstname" id="firstname" class="form-control" placeholder="Enter first name">

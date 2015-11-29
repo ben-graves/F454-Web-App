@@ -1,15 +1,25 @@
+<head>
+  <title>Subjects</title>
+</head>
+<!--Navbar-->
 <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
+      <!--Toggle navigation button on mobile version-->
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
       </button>
-      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "#"><p>
+        <img class="logo" src="images/logowhite.png" />
+        <img class="logo hover" src="images/logoblack.png" />
+        E-Flashcards</p>
+      </a>
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
+        <!--Buttons - unique to page-->
         <li ><a  class="nav-button" href="/#/start/{{userid}}">Start</a></li>
         <li><a class="nav-button" href="/#/newset/{{userid}}">New Set</a></li>
         <li><a class="nav-button" data-toggle="modal" data-target="#newSubject">New Subject</a></li>
@@ -35,6 +45,11 @@
       </div>
     </div>
     <div class="row">
+      <!--Display sets in grid view
+      lg screen: 4 subjects wide
+      md screen: 3 subjects wide
+      sm screen: 2 subjects wide
+      xs screen; 2 subjects wide-->
       <div ng-repeat="subject in subjects" class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
         <div class="thumbnail" id="subjectthumbnail" ng-click="selectSubject(subject.id)">
           <a href="/#/sets/{{userid}}/{{subject.subjectid}}">
@@ -47,11 +62,6 @@
                 <div class="progress-bar progress-bar-success" style="width: {{subject.percentage}}%; min-width: 2em;">
                   {{subject.percentage}}%
                 </div>
-                  <!--
-                  <div class="progress-bar progress-bar-danger" style="width: 25%">
-                    25%
-                  </div>
-                -->
               </div>
             </div>
           </a>
@@ -60,10 +70,10 @@
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3" >
         <div class="thumbnail not-there" id="subjectthumbnail" data-toggle="modal" data-target="#newSubject">
           <img id="subjectimg" src="images/add.png" width=100%>
-          <h3 class = "text-center">New Subject</h3><br><br><br><br>
+          <h3 class = "text-center">New Subject</h3><br><br><br>
         </div>
       </div>
-      <!-- Modal -->
+      <!-- New set pop-up box -->
       <div class="modal fade" id="newSubject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
@@ -81,11 +91,7 @@
                   <div class="col-sm-9">
                     <input type="text" name="subjectname" ng-model="subjectdetails.name" id="name" class="form-control" placeholder="Enter subject name">
                   </div>
-                  <!--<div class="col-sm-5 errormessage">
-                    <p>{{errormessage.name}}</p>
-                  </div>-->
                 </div>
-                <!--<div class="form-group inline">-->
                 <div class = "col-sm-8">
                   <label class="control-label col-sm-1"for="subject">Icon</label>
                   <div class = "container col-sm-11">
@@ -95,13 +101,8 @@
                     </div>
                   </div>
                 </div>
-                  <!--</div>
-                  <!--<div class="col-sm-5 errormessage">
-                    <p>{{errormessage.subject}}</p>
-                  </div>-->
               </div>
-            <!--</div>-->
-        </div>
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" ng-click="createSubject(subjectdetails)" data-dismiss="modal">Save</button>
             </div>

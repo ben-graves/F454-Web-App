@@ -1,15 +1,25 @@
+<head>
+  <title>Typed Answer - {{set.name}}</title>
+</head>
+<!--Navbar-->
 <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
+      <!--Toggle navigation button on mobile version-->
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
       </button>
-      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "#"><p>
+        <img class="logo" src="images/logowhite.png" />
+        <img class="logo hover" src="images/logoblack.png" />
+        E-Flashcards</p>
+      </a>
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
+        <!--Buttons - unique to page-->
         <li ><a  class="nav-button" href="/#/start/{{userid}}">Start</a></li>
         <li><a class="nav-button" href="/#/newset/{{userid}}">New Set</a></li>
         <li><a class="nav-button active" >Learn Set</a></li>
@@ -21,34 +31,50 @@
 <main>
   <div class="container">
     <div class = "row">
-        <h2 class="smallheader">Learn {{set.name}} <small >Manual Testing</h2>
+        <h2 class="smallheader">Learn {{set.name}} <small >Typed Answer</h2>
     </div>
+    <h3>{{learnt}}/{{total}} Cards Learnt | Current Grade <strong>{{set.predicted_grade}}</strong> | Exam Date <strong>{{set.examdate}}</strong></h3>
     <div class="progress">
-      <div class="progress-bar progress-bar-success" style="width: {{correct}}%;  min-width: 2em;">
-        {{correct}}%
+      <div class="progress-bar progress-bar-success" style="width: {{correctpercentage}}%;  min-width: 2em;">
+        {{correct}}  Correct Answers
       </div>
-      <div class="progress-bar progress-bar-danger" style="width: {{incorrect}}%;  min-width: 2em;">
-        {{incorrect}}%
+      <div class="progress-bar progress-bar-danger" style="width: {{incorrectpercentage}}%;;  min-width: 2em;">
+        {{incorrect}}  Incorrect Answers
       </div>
+      &nbsp{{cardsremaining}} Cards Remaining
     </div>
   <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
-      <!-- Wrapper for carousel items -->
+      <!-- Carousel to hold flashcards -->
       <div class="carousel-inner">
         <div ng-repeat="card in flashcards" class="item thumbnail flashcard {{card.active}}">
           <div class="mc">
             <div class="typedarea">
               <form>
-                <div class="control-label col-xs-12" id="fronttext">{{card.front}}</div>
-                <div class="col-sm-10">
-                  <input type="text" name="backentry" ng-model="back" id="backentry" class="form-control input-lg" placeholder="Enter Back">
-                </div>
-                <button  class="col-sm-2 btn btn-primary input-lg"  ng-click="">Submit</button>
+                <h2 class="control-label col-xs-9" id="fronttext">{{card.front}}</h2>
+                <img class="findoutmoreleft col-xs-1" ng-click="wiki(card.front)" src="images/wikipedia.png" width=90%></img>
+                <img class="findoutmoreright  col-xs-1" ng-click="search(card.front)" src="images/search.png" width=90%></img>
+              <div id = "answerbox{{$index}}" class="form-group has-feedback col-sm-12">
+                <input ng-keyup="showhidesubmit(answer, $index)" type="text"  ng-model="answer" id="backentry{{$index}}" class="form-control input-lg backentry" placeholder="Type Back">
+                <span class = "col-sm-1 answericon" id = "answericon{{$index}}" aria-hidden="true"></span>
+                <span id="inputError2Status" class="sr-only">(error) </span>
+                <span id="inputSuccess2Status" class="sr-only">(success)</span>
+              </div>
+              <div id = "correctionbox{{$index}}" class="form-group has-feedback col-sm-12 has-success hidden">
+                <input type="text" name="correctionbox" id="correction{{$index}}" class="form-control input-lg correction" value = "{{card.back}}" readonly="readonly">
+                <span id = "correctionicon{{$index}}"  class = "correctionicon glyphicon glyphicon-ok form-control-feedback"></span>
+              </div>
+                <button class="col-sm-offset-9 col-sm-3 btn btn-primary btn-lg hidden"  id="submitbutton{{$index}}" ng-click="submit(answer, card.back, $index)">Submit</button>
               </form>
+              </div>
             </div>
         </div>
+        <!--Link to summary page-->
+        <div class="item thumbnail flashcard">
+          <center><h1>Testing Complete<br><a href="/#/summary/{{userid}}/{{setid}}">View summary</a></h1></center>
+        </div>
       </div>
-      <a class="carousel-control right" href="//#myCarousel" data-slide="next">
-          <span class="glyphicon glyphicon-chevron-right"></span>
+      <a class="carousel-control" ng-click="next()" id ="rightbutton" href="//#myCarousel" data-slide="next">
+          <span id ="righticon" class="glyphicon"></span>
       </a>
   </div>
 </div>

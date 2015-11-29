@@ -1,15 +1,25 @@
+<head>
+  <title>Edit Set - {{cardsetdetails.setname}}</title>
+</head>
+<!--Navbar-->
 <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
+      <!--Toggle navigation button on mobile version-->
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
       </button>
-      <a class = "navbar-brand"  href = "#"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "#"><p>
+        <img class="logo" src="images/logowhite.png" />
+        <img class="logo hover" src="images/logoblack.png" />
+        E-Flashcards</p>
+      </a>
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
+        <!--Buttons - unique to page-->
         <li ><a  class="nav-button" href="/#/start/{{userid}}">Start</a></li>
         <li><a class="nav-button" href="/#/newset/{{userid}}">New Set</a></li>
         <li><a class="nav-button active" >Edit Set</a></li>
@@ -83,7 +93,8 @@
   </div>
   </div>
 
-  <!-- Modal Definition -->
+  <!--Modal = pop-up box -->
+  <!--Definition pop-up box-->
   <div class="modal fade" id="autoDefine" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -107,7 +118,6 @@
               <div  class="col-sm-6" ng-repeat="article in articles">
                 <label  class="radio-vertical article"><h4 class = "nopadding"><input type="radio" name="optradio" value={{article.text}} ng-model="selected.text"> {{article.title}}<small> {{article.text}}</small></h4></label>
                 <div align="right"><a href={{article.link}} target="_blank">Full Article</a></div>
-
               </div>
             </div>
           </div>
@@ -119,7 +129,7 @@
       </div>
     </div>
   </div>
-  <!-- Modal Question -->
+  <!--Question pop-up box-->
   <div class="modal fade" id="searchPrompt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -130,11 +140,11 @@
         <div class="modal-body">
           <h4>Try searching your question...</h4>
           <center><button ng-click="search(carddetails.front)" class="searchbar">{{carddetails.front}}  <span class="glyphicon glyphicon-search searchbutton" aria-hidden="true"></span></button></center>
-    </div>
+        </div>
       </div>
     </div>
   </div>
-  <!-- Modal Translation -->
+  <!--Translation pop-up box-->
   <div class="modal fade" id="autoTranslate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
@@ -144,31 +154,31 @@
         </div>
         <div class="modal-body">
           <form class = "form-horizontal">
-          <div class="row form-group">
-            <div class="col-sm-6">
-              <h3 class="nopadding">Translate From</h3><br>
-              <select class="form-control input-lg"  ng-model="langfrom">
-                <optgroup label="Top Languages">
-                  <option ng-repeat="language in toplanguages" value={{language.code}}>{{language.name}}</option>
-                </optgroup>
-                <optgroup label="All Languages">
-                  <option ng-repeat="language in alllanguages" value={{language.code}}>{{language.name}}</option>
-                </optgroup>
-              </select>
+            <div class="row form-group">
+              <div class="col-sm-6">
+                <h3 class="nopadding">Translate From</h3><br>
+                <select class="form-control input-lg"  ng-model="langfrom">
+                  <optgroup label="Top Languages">
+                    <option ng-repeat="language in toplanguages" value={{language.code}}>{{language.name}}</option>
+                  </optgroup>
+                  <optgroup label="All Languages">
+                    <option ng-repeat="language in alllanguages" value={{language.code}}>{{language.name}}</option>
+                  </optgroup>
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <h3 class="nopadding">Translate To</h3><br>
+                <select class="form-control input-lg"  ng-model="langto">
+                  <optgroup label="Top Languages">
+                    <option ng-repeat="language in toplanguages" value={{language.code}}>{{language.name}}</option>
+                  </optgroup>
+                  <optgroup label="All Languages">
+                    <option ng-repeat="language in alllanguages" value={{language.code}}>{{language.name}}</option>
+                  </optgroup>
+                </select>
+              </div>
             </div>
-            <div class="col-sm-6">
-              <h3 class="nopadding">Translate To</h3><br>
-              <select class="form-control input-lg"  ng-model="langto">
-                <optgroup label="Top Languages">
-                  <option ng-repeat="language in toplanguages" value={{language.code}}>{{language.name}}</option>
-                </optgroup>
-                <optgroup label="All Languages">
-                  <option ng-repeat="language in alllanguages" value={{language.code}}>{{language.name}}</option>
-                </optgroup>
-              </select>
-            </div>
-          </div>
-        </form>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" ng-click="translate(langfrom, langto)" data-dismiss="modal">Translate</button>
@@ -176,7 +186,7 @@
       </div>
     </div>
   </div>
-  <!-- Modal Error -->
+  <!--Error pop-up box-->
   <div class="modal fade" id="errorBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
