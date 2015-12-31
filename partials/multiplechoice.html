@@ -10,7 +10,11 @@
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
       </button>
-      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p>
+        <img class="logo" src="images/logowhite.png" />
+        <img class="logo hover" src="images/logoblack.png" />
+        E-Flashcards</p>
+      </a>
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
@@ -28,7 +32,7 @@
     <div class = "row">
         <h2 class="smallheader">Learn {{set.name}} <small >Multiple Choice</h2>
     </div>
-    <h3>{{learnt}}/{{total}} Cards Learnt | Current Grade <strong>{{set.predicted_grade}}</strong> | Exam Date <strong>{{set.examdate}}</strong></h3>
+    <h3>{{set.learnt}}/{{set.total}} Cards Learnt | Current Grade <strong>{{set.predicted_grade}}</strong> | Exam Date <strong>{{set.examdate}}</strong></h3>
     <div class="progress">
       <div class="progress-bar progress-bar-success" style="width: {{correctpercentage}}%;  min-width: 2em;">
         {{correct}} Correct Answers
@@ -43,12 +47,13 @@
       <div class="carousel-inner">
         <div ng-repeat="card in flashcards" class="item thumbnail flashcard {{card.active}}">
           <div class="mc">
-            <div class="mcfront col-xs-9">
-              <h2>{{card.front}}</h2>
+            <div class="mcfront col-xs-7">
+              <h2 style="font-size:{{card.size}}">{{card.front}}</h2>
             </div>
-            <h1 class="nopadding col-xs-1">{{card.grade}}</h1>
+            <h1 align="right" class="nopadding col-xs-3">{{card.grade}}&nbsp;&nbsp;</h1>
             <img class="findoutmoreleft col-xs-1" ng-click="wiki(card.front)" src="images/wikipedia.png" width=90%></img>
             <img class="findoutmoreright  col-xs-1" ng-click="search(card.front)" src="images/search.png" width=90%></img>
+            <br>
             <div class="mcoptions">
               <form>
                 <div class="col-md-6">

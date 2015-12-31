@@ -351,6 +351,10 @@ def getflashcard(setid, flashcardid):
 #save flashcard API
 @app.route('/saveflashcard/setid=<setid>/flashcardid=<flashcardid>/typeid=<typeid>/front=<front>/back=<back>/grade=<grade>/learnt=<learnt>')
 def saveflashcard(setid, flashcardid, typeid, front, back, grade, learnt):
+
+    front = front.replace("*slash*","/").replace("*qm*","?")
+    back = back.replace("*slash*","/").replace("*qm*","?")
+
     cnx = mysql.connector.connect(user="root", database="e-flashcards")
     cursor = cnx.cursor()
     #update flashcards table
@@ -430,7 +434,7 @@ def getcardstolearn(setid,shuffle, unlearntonly):
     #shuffle id required
     if shuffle == "1":
         random.shuffle(dict_list)
-    return str(dict_list).replace("'",'"')
+    return json.dumps(dict_list)
 
 #API to get the total number of cards and number of learnt cards in a set
 @app.route('/getlearntandtotal/setid=<setid>')

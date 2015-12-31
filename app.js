@@ -50,9 +50,10 @@ var app = angular.module("app", ['ngRoute']).
         if (signupdetails === undefined) {
           valid = false;
           $scope.signupmessage.email = "Invalid email address"
+          $scope.signupmessage.firstname = "Enter first name"
           $scope.signupmessage.lastname = "Enter last name"
           $scope.signupmessage.dob = "Enter date of bith"
-          $scope.signupmessage.username = "Invalid username"
+          $scope.signupmessage.username = "Enter username"
           $scope.signupmessage.password = "Enter password"
           $scope.signupmessage.retypepassword = "Renter password"
         }
@@ -74,6 +75,11 @@ var app = angular.module("app", ['ngRoute']).
           }
           else{
             $scope.signupmessage.firstname = ""
+            var Exp = /^[A-Za-z]+$/;
+            if (!signupdetails.firstname.match(Exp)) {
+              valid = false;
+              $scope.signupmessage.firstname = "Must only contain letters"
+            }
           }
           if (signupdetails.lastname === undefined) {
             valid = false;
@@ -81,6 +87,11 @@ var app = angular.module("app", ['ngRoute']).
           }
           else{
             $scope.signupmessage.lastname = ""
+            var Exp = /^[A-Za-z]+$/;
+            if (!signupdetails.lastname.match(Exp)) {
+              valid = false;
+              $scope.signupmessage.lastname = "Must only contain letters"
+            }
           }
           if (signupdetails.dob === undefined || signupdetails.dob === null) {
             valid = false;
@@ -88,10 +99,20 @@ var app = angular.module("app", ['ngRoute']).
           }
           else{
             $scope.signupmessage.dob = ""
+            var now = new Date();
+            console.log(signupdetails.dob)
+            console.log(now)
+            if (signupdetails.dob > now) {
+              valid = false;
+              $scope.signupmessage.dob = "DoB must be in the past"
+            }
           }
           if (signupdetails.username === undefined) {
             valid = false;
-            $scope.signupmessage.username = "Invalid username"
+            $scope.signupmessage.username = "Enter username"
+          } else if (signupdetails.username.length > 20){
+            valid = false;
+            $scope.signupmessage.username = "Username must be 20 characters or less"
           }
           else{
             $scope.signupmessage.username = ""
@@ -112,6 +133,22 @@ var app = angular.module("app", ['ngRoute']).
             if (signupdetails.password != signupdetails.retypepassword) {
               valid = false;
               $scope.signupmessage.retypepassword = "Passwords don't match"
+            } else if (signupdetails.password.length < 5){
+                valid = false;
+                $scope.signupmessage.password = "Password must contain at least 5 characters"
+              }
+              else if (signupdetails.password.length > 30){
+                  valid = false;
+                  $scope.signupmessage.password = "Password must contain at most 30 characters"
+                }
+
+              else {
+                //check alphanumeric
+                var Exp = /((^[0-9]+[a-z]+)|(^[a-z]+[0-9]+))+[0-9a-z]+$/i;
+                if (!signupdetails.password.match(Exp)) {
+                  valid = false;
+                  $scope.signupmessage.password = "Password must contain both letters and numbers and no other charaters e.g (_, ., !, etc.)"
+              }
             }
           }
         }
@@ -146,7 +183,7 @@ var app = angular.module("app", ['ngRoute']).
         //check validity
         if (validatesignup(signupdetails)){
           //if valid, set up API url for creating a user
-          var url = "http://localhost:5000/createuser/firstname="+signupdetails.firstname+"/lastname="+signupdetails.lastname+"/dob=1997-12-27/emailaddress="+signupdetails.email+"/username="+signupdetails.username+"/password="+signupdetails.password+"/"
+          var url = "http://localhost:5000/createuser/firstname="+signupdetails.firstname+"/lastname="+signupdetails.lastname+"/dob="+signupdetails.dob.getFullYear()+"-"+signupdetails.dob.getMonth()+"-"+signupdetails.dob.getDate()+"/emailaddress="+signupdetails.email+"/username="+signupdetails.username+"/password="+signupdetails.password+"/"
            $http.get(url)
             .then(function(response) {
               //once response has been recieved, check to see if the creation was successful. If successful the new user's ID will be returned, if not "Username Taken" will be returned
@@ -245,6 +282,7 @@ window.onbeforeunload = confirmOnPageExit;
   var url = "http://localhost:5000/getcardstolearn/setid="+setid+"/shuffle="+shuffle+"/unlearntonly="+unlearntonly;
   $http.get(url)
    .then(function(response) {
+     console.log(response.data)
      //returns array of objects, one for each card in the following format:
      //{front:"front content", back:"back content", learnt:1/0, grade:"grade of card"}
      $scope.flashcards = response.data
@@ -372,8 +410,13 @@ window.onbeforeunload = confirmOnPageExit;
        //set first card to active as this will mean it is displayed first
        $scope.flashcards[0].active = "active"
 
+       console.log($scope.flashcards[0].front.length)
+
        //convert from sql database format boolean (1/0), to js format (true/ false)
        for (i=0; i < $scope.flashcards.length; i++) {
+         if ($scope.flashcards[i].front.length > 110){
+           $scope.flashcards[i].size = "28px"
+         }
          if ($scope.flashcards[i].learnt === 1) {
            $scope.flashcards[i].learnt = true
          } else {
@@ -446,11 +489,18 @@ window.onbeforeunload = confirmOnPageExit;
         //update variables
         $scope.correct += 1
         $scope.correctpercentage = ($scope.correct/$scope.flashcards.length)*100
-
-        //change learnt of card, setting learnt to true
-        var url = "http://localhost:5000/changelearnt/flashcardid="+$scope.flashcards[index].flashcardid+"/learnt=true"
-        //call api, no need to wait as no response
-        $http.get(url)
+        console.log($scope.flashcards[index].learnt)
+        if ($scope.flashcards[index].learnt === false){
+          //change learnt of card, setting learnt to true
+          var url = "http://localhost:5000/changelearnt/flashcardid="+$scope.flashcards[index].flashcardid+"/learnt=true"
+          //call api, no need to wait as no response
+          $http.get(url).then(function(response) {
+            var url = "http://localhost:5000/getsetdetails/setid="+$routeParams.setid
+            $http.get(url).then(function(response) {
+              $scope.set = response.data
+            });
+          });
+        }
       }
       else{
         //incorrect answer
@@ -463,10 +513,16 @@ window.onbeforeunload = confirmOnPageExit;
 
         //add cross to end of input box
         angular.element(document.querySelector('[id="answericon'+index+'"]')).addClass('glyphicon glyphicon-remove form-control-feedback');
-
-        //change learnt boolean to false
-        var url = "http://localhost:5000/changelearnt/flashcardid="+$scope.flashcards[index].flashcardid+"/learnt=false"
-        $http.get(url)
+        if ($scope.flashcards[index].learnt){
+          //change learnt boolean to false
+          var url = "http://localhost:5000/changelearnt/flashcardid="+$scope.flashcards[index].flashcardid+"/learnt=false"
+          $http.get(url).then(function(response) {
+            var url = "http://localhost:5000/getsetdetails/setid="+$routeParams.setid
+            $http.get(url).then(function(response) {
+              $scope.set = response.data
+            });
+          });
+        }
       }
     }
     //create search function to be run when user presses search button, with parameter of front content
@@ -511,7 +567,14 @@ angular.module("app").controller("newsetCtrl",['$scope', '$routeParams', '$http'
   $http.get(url)
    .then(function(response) {
      $scope.subjects = response.data
-   });
+     if ($scope.subjects.length ==- 0) {
+       var r = confirm("Before you can create a set, you must create at least one subject. Go to the subjects page?");
+        if (r == true) {
+           window.open("/#/subjects/"+$routeParams.userid, "_self");
+        }
+}
+     });
+
 
   $scope.addcards = function(setdetails){
     //format date into YYYY-MM-DD as required for db
@@ -588,7 +651,7 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
     $scope.nextcard = function(carddetails) {
       carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
       //save current flashcard
-      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front+"/back="+carddetails.back+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front.replace('/', '*slash*').replace("?","*qm*")+"/back="+carddetails.back.replace('/', '*slash*').replace("?","*qm*")+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
       $http.get(url).then(function(response) {
         //open next card in same tab
         window.open("/#/editset/"+userid+"/"+subjectid+"/"+setid+"/"+$scope.cardsetdetails.nextid, "_self");
@@ -599,7 +662,7 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
     $scope.previouscard = function(carddetails) {
       carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
       //save current card
-      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front+"/back="+carddetails.back+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front.replace('/', '*slash*').replace("?","*qm*")+"/back="+carddetails.back.replace('/', '*slash*').replace("?","*qm*")+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
       $http.get(url).then(function(response) {
         //open previous card in same tab
         window.open("/#/editset/"+userid+"/"+subjectid+"/"+setid+"/"+$scope.cardsetdetails.previd, "_self");
@@ -610,7 +673,8 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
     $scope.save = function(carddetails) {
       carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
       //save current card
-      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front+"/back="+carddetails.back+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front.replace('/', '*slash*').replace("?","*qm*")+"/back="+carddetails.back.replace('/', '*slash*').replace("?","*qm*")+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+
       $http.get(url).then(function(response) {
         //open set page
         window.open("/#/start/"+userid, "_self");
@@ -637,7 +701,7 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
               show: 'true'
             });
           //set up url to search definitions
-          var url = "http://localhost:5001/definitions/term="+front+"/"
+          var url = "http://localhost:5001/definitions/term="+front+"/subject="+$scope.cardsetdetails.subjectname
            $http.get(url)
             .then(function(response) {
               //returns array of definitons
@@ -650,19 +714,31 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
               $scope.selected = {}
               //set the selected text to the first result, so in the radio buttons it will be automatically selected at first
               $scope.selected.text = $scope.firstResult
-              //search wikipedia
-              var url = "http://localhost:5001/titleandarticle/term="+front+"/"
-              $http.get(url)
-               .then(function(response) {
-                 //returns array or objects of following format:
-                 //{title:"article title",
-                 // text:"first sentance of article",
-                 // link:"link to article"}
-                 $scope.articles = response.data
-                 //update wikipedia title to number of results
-                 $scope.wikipedia_title = $scope.articles.length+" Wikipedia Articles Found"
-               });
+            },
+            //if error occurs
+            function(){
+              //set definitions message to 0 definitions found
+              $scope.definitions_title = "0 Definitions Found"
             });
+
+            //search wikipedia
+            var url = "http://localhost:5001/titleandarticle/term="+front+"/"
+            $http.get(url)
+             .then(function(response) {
+               //returns array or objects of following format:
+               //{title:"article title",
+               // text:"first sentance of article",
+               // link:"link to article"}
+               $scope.articles = response.data
+               //update wikipedia title to number of results
+               $scope.wikipedia_title = $scope.articles.length+" Wikipedia Articles Found"
+             },
+             //if error occurs
+             function() {
+               //set wikipedia message to 0 articles found
+               $scope.wikipedia_title = "0 Wikipedia Articles Found"
+             });
+
           }
           //question and answer
           else if (type === "1") {
@@ -682,6 +758,8 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
                                    {'name': "Chinese", "code": 'zh'}]
             //all languages
             $scope.alllanguages = [{'name': 'Afrikaans', 'code': 'af'}, {'name': 'Albanian', 'code': 'sq'}, {'name': 'Arabic', 'code': 'ar'}, {'name': 'Armenian', 'code': 'hy'}, {'name': 'Azerbaijani', 'code': 'az'}, {'name': 'Basque', 'code': 'eu'}, {'name': 'Belarusian', 'code': 'be'}, {'name': 'Bengali', 'code': 'bn'}, {'name': 'Bosnian', 'code': 'bs'}, {'name': 'Bulgarian', 'code': 'bg'}, {'name': 'Catalan', 'code': 'ca'}, {'name': 'Cebuano', 'code': 'ceb'}, {'name': 'Chichewa', 'code': 'ny'}, {'name': 'Chinese', 'code': 'zh'}, {'name': 'Chinese (Simplified)', 'code': 'zh-CN'}, {'name': 'Chinese (Traditional)', 'code': 'zh-TW'}, {'name': 'Croatian', 'code': 'hr'}, {'name': 'Czech', 'code': 'cs'}, {'name': 'Danish', 'code': 'da'}, {'name': 'Dutch', 'code': 'nl'}, {'name': 'English', 'code': 'en'}, {'name': 'Esperanto', 'code': 'eo'}, {'name': 'Estonian', 'code': 'et'}, {'name': 'Filipino', 'code': 'tl'}, {'name': 'Finnish', 'code': 'fi'}, {'name': 'French', 'code': 'fr'}, {'name': 'Galician', 'code': 'gl'}, {'name': 'Georgian', 'code': 'ka'}, {'name': 'German', 'code': 'de'}, {'name': 'Greek', 'code': 'el'}, {'name': 'Gujarati', 'code': 'gu'}, {'name': 'Haitian Creole', 'code': 'ht'}, {'name': 'Hausa', 'code': 'ha'}, {'name': 'Hebrew', 'code': 'iw'}, {'name': 'Hindi', 'code': 'hi'}, {'name': 'Hmong', 'code': 'hmn'}, {'name': 'Hungarian', 'code': 'hu'}, {'name': 'Icelandic', 'code': 'is'}, {'name': 'Igbo', 'code': 'ig'}, {'name': 'Indonesian', 'code': 'id'}, {'name': 'Irish', 'code': 'ga'}, {'name': 'Italian', 'code': 'it'}, {'name': 'Japanese', 'code': 'ja'}, {'name': 'Javanese', 'code': 'jw'}, {'name': 'Kannada', 'code': 'kn'}, {'name': 'Kazakh', 'code': 'kk'}, {'name': 'Khmer', 'code': 'km'}, {'name': 'Korean', 'code': 'ko'}, {'name': 'Lao', 'code': 'lo'}, {'name': 'Latin', 'code': 'la'}, {'name': 'Latvian', 'code': 'lv'}, {'name': 'Lithuanian', 'code': 'lt'}, {'name': 'Macedonian', 'code': 'mk'}, {'name': 'Malagasy', 'code': 'mg'}, {'name': 'Malay', 'code': 'ms'}, {'name': 'Malayalam', 'code': 'ml'}, {'name': 'Maltese', 'code': 'mt'}, {'name': 'Maori', 'code': 'mi'}, {'name': 'Marathi', 'code': 'mr'}, {'name': 'Mongolian', 'code': 'mn'}, {'name': 'Myanmar (Burmese)', 'code': 'my'}, {'name': 'Nepali', 'code': 'ne'}, {'name': 'Norwegian', 'code': 'no'}, {'name': 'Persian', 'code': 'fa'}, {'name': 'Polish', 'code': 'pl'}, {'name': 'Portuguese', 'code': 'pt'}, {'name': 'Punjabi', 'code': 'pa'}, {'name': 'Romanian', 'code': 'ro'}, {'name': 'Russian', 'code': 'ru'}, {'name': 'Serbian', 'code': 'sr'}, {'name': 'Sesotho', 'code': 'st'}, {'name': 'Sinhala', 'code': 'si'}, {'name': 'Slovak', 'code': 'sk'}, {'name': 'Slovenian', 'code': 'sl'}, {'name': 'Somali', 'code': 'so'}, {'name': 'Spanish', 'code': 'es'}, {'name': 'Sundanese', 'code': 'su'}, {'name': 'Swahili', 'code': 'sw'}, {'name': 'Swedish', 'code': 'sv'}, {'name': 'Tajik', 'code': 'tg'}, {'name': 'Tamil', 'code': 'ta'}, {'name': 'Telugu', 'code': 'te'}, {'name': 'Thai', 'code': 'th'}, {'name': 'Turkish', 'code': 'tr'}, {'name': 'Ukrainian', 'code': 'uk'}, {'name': 'Urdu', 'code': 'ur'}, {'name': 'Uzbek', 'code': 'uz'}, {'name': 'Vietnamese', 'code': 'vi'}, {'name': 'Welsh', 'code': 'cy'}, {'name': 'Yiddish', 'code': 'yi'}, {'name': 'Yoruba', 'code': 'yo'}, {'name': 'Zulu', 'code': 'zu'}]
+
+            $scope.langfrom = 'en'
 
             //translate function to be run when translate button is pressed
             $scope.translate = function (langfrom, langto) {
@@ -764,8 +842,8 @@ angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', f
    }
    //set size of text based on the type of card
    if ($scope.flashcards[i].typeid === 1){
-     $scope.flashcards[i].frontsize = "48px"
-     $scope.flashcards[i].backsize = "24px"
+     $scope.flashcards[i].frontsize = "40px"
+     $scope.flashcards[i].backsize = "30px"
    }
    else if ($scope.flashcards[i].typeid === 2){
      $scope.flashcards[i].frontsize = "30px"
@@ -776,7 +854,7 @@ angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', f
      $scope.flashcards[i].backsize = "35px"
    }
     if ($scope.flashcards[i].grade === "None"){
-      $scope.flashcards[i].gradegrid = ""
+      $scope.flashcards[i].gradegrid = "Ungraded"
     } else {
       $scope.flashcards[i].gradegrid = $scope.flashcards[i].grade
     }
@@ -795,9 +873,10 @@ angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', f
 
  //start session function to be called when start learning button is pressed
  $scope.startsession = function (sessiondetails) {
+
    //set up path in following format:
    //"/#/learningtype/userid/setid/shuffleboolean/"
-   var path = "/#/"
+   var path = "http://localhost:8080/#/"
    if (sessiondetails.learnmethod === "0") {
      path += "manual/"+userid+"/"+setid
    } else if (sessiondetails.learnmethod === "1") {
@@ -818,6 +897,7 @@ angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', f
    path += "/0"
  }
 
+   $('.modal-backdrop').remove();
 
    window.open(path, "_self");
  }
@@ -844,6 +924,9 @@ angular.module("app").controller("setCtrl",['$scope', '$routeParams', '$http', f
     }]);
 
 angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
+  //initialse new subject details object
+  $scope.subjectdetails = {name:"", image:"images/subjects/Other.png"}
+
   var userid = $routeParams.userid;
   $scope.userid = userid
   var url = "http://localhost:5000/getlearntandtotaluser/userid="+userid
@@ -870,7 +953,11 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
         $scope.overall.total += $scope.subjects[i].total;
         $scope.subjects[i].image = "images/subjects/"+$scope.subjects[i].image
       }
-      $scope.overall.percentage = Math.floor(($scope.overall.learnt/$scope.overall.total)*100)
+      if ($scope.overall.total === 0){
+        $scope.overall.percentage = 0
+      } else{
+          $scope.overall.percentage = Math.floor(($scope.overall.learnt/$scope.overall.total)*100)
+      }
       });
       });
       $scope.subjectimages = [
@@ -921,7 +1008,7 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
           // If we haven't been passed the event get the window.event
           e = e || window.event;
 
-          var message = 'Any text will block the navigation and display a prompt';
+          var message = 'Ending this learning session will result in the loss of unsaved data';
 
           // For IE6-8 and Firefox prior to version 4
           if (e)
@@ -979,6 +1066,9 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
             }
            //iterate through flashcards
            for (i in $scope.flashcards){
+             if ($scope.flashcards[i].front.length > 110){
+               $scope.flashcards[i].size = "28px"
+             }
              //randomise position of correct answer
              $scope.flashcards[i].correct = Math.floor((Math.random() * 4))
              //initialise answers array
@@ -1031,6 +1121,22 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
              $("#rightbutton").removeClass("right");
            }
 
+           //create search function to be run when user presses search button, with parameter of front content
+           $scope.search = function(front) {
+             //set up google url in format "https://www.google.co.uk/#q=query+with+pluses+instead+of+spaces"
+             var url = "https://www.google.co.uk/#q="+front.replace(" ","+")
+             //open url in new tab
+             window.open(url, '_blank').focus();
+           };
+
+           //create wikipedia function to be run when user presses wikipedia button, with parameter of front content
+           $scope.wiki = function(front) {
+             //set up wikipedia url in format "https://en.wikipedia.org/wiki/query_with_underscores_instead_of_spaces"
+             var url = "https://en.wikipedia.org/wiki/"+front.replace(" ","_")
+             //open url in new tab
+             window.open(url, '_blank').focus();
+           };
+
            //function to be called when answer selected
            $scope.select = function(selectedanswer, index){
              //hide submit button
@@ -1065,9 +1171,16 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
                $scope.flashcards[index].message = "Correct!"
                $scope.correct += 1
                $scope.correctpercentage = ($scope.correct/$scope.flashcards.length)*100
-               //change learnt to true
-               var url = "http://localhost:5000/changelearnt/flashcardid="+$scope.flashcards[index].flashcardid+"/learnt=true"
-               $http.get(url)
+               if ($scope.flashcards[index].learnt === false){
+                 //change learnt to true
+                 var url = "http://localhost:5000/changelearnt/flashcardid="+$scope.flashcards[index].flashcardid+"/learnt=true"
+                 $http.get(url).then(function(response) {
+                   var url = "http://localhost:5000/getsetdetails/setid="+$routeParams.setid
+                   $http.get(url).then(function(response) {
+                     $scope.set = response.data
+                   });
+                 });
+               }
              }
              else{
                //update variables and message
@@ -1075,9 +1188,16 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
                $scope.incorrectpercentage = ($scope.incorrect/$scope.flashcards.length)*100
                $scope.flashcards[index].colours[selectedanswer] = "incorrect"
                $scope.flashcards[index].message = "Incorrect"
-               //change learnt to false
-               var url = "http://localhost:5000/changelearnt/flashcardid="+$scope.flashcards[index].flashcardid+"/learnt=false"
-               $http.get(url)
+               if ($scope.flashcards[index].learnt){
+                 //change learnt to false
+                 var url = "http://localhost:5000/changelearnt/flashcardid="+$scope.flashcards[index].flashcardid+"/learnt=false"
+                 $http.get(url).then(function(response) {
+                   var url = "http://localhost:5000/getsetdetails/setid="+$routeParams.setid
+                   $http.get(url).then(function(response) {
+                     $scope.set = response.data
+                   });
+                 });
+              }
              }
            }
         //initialise variables
@@ -1089,9 +1209,7 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
         $http.get(url).then(function(response) {
           $scope.set = response.data
         });
-
-
-        }]);
+      }]);
 
 //summary controller to provide data for the summary page
 angular.module("app").controller("summaryCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
@@ -1149,6 +1267,7 @@ angular.module("app").controller("summaryCtrl",['$scope', '$routeParams', '$http
 //sets controller to provide data and services to sets page
 angular.module("app").controller("setsCtrl",['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
   $scope.userid = $routeParams.userid
+
 
   //get subject details
   var url = "http://localhost:5000/getsubjectdetails/subjectid="+$routeParams.subjectid

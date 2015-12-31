@@ -53,6 +53,7 @@ body{
   font-family: Roboto Thin;
   color: white;
   font-size: 30px;
+  text-shadow: 0px 0px #ff0000;
 }
 
 .navbar-brand:hover {
@@ -93,6 +94,8 @@ h2 {
 .option {
   width : 240px;
 }
+
+
 
 .nav-button{
   font-family: Calibri Light;
@@ -312,6 +315,7 @@ footer {
   height : 50%;
   padding: 4%;
   overflow: auto;
+  line-height: 110%;
 
 }
 
@@ -548,11 +552,25 @@ a:hover{
   height : 30px;
 }
 .navbar-brand:hover img.logo{
-display:none;
+  display:none;
 }
 .navbar-brand img.hover{
-display:none;
+  display:none;
 }
 .navbar-brand:hover img.hover{
-display:inline;
+  display:inline;
+}
+
+.option img.menu{
+  width : 200px;
+  height : 200px;
+}
+.option:hover img.menu{
+  display:none;
+}
+.option img.hover{
+  display:none;
+}
+.option:hover img.hover{
+  display:inline;
 }

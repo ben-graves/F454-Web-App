@@ -11,7 +11,11 @@
         <span class = "icon-bar"></span>
         <span class = "icon-bar"></span>
       </button>
-      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p><img id=logo src="images/logowhite.png" align="bottom" width="30px" height="30px"> E-Flashcards</p></a>
+      <a class = "navbar-brand"  href = "/#/start/{{userid}}"><p>
+        <img class="logo" src="images/logowhite.png" />
+        <img class="logo hover" src="images/logoblack.png" />
+        E-Flashcards</p>
+      </a>
     </div>
     <div class = "navbar-collapse collapse">
       <ul class = "nav navbar-nav navbar-right">
@@ -35,12 +39,12 @@
   <div class="container">
     <div class = "row">
       <div class="col-xs-6 col-sm-8 col-md-10">
-        <h3>{{learnt}}/{{total}} Cards Learnt | Current Grade <strong>{{set.predicted_grade}}</strong> | Exam Date <strong>{{set.examdate}}</strong></h3>
+        <h3>{{set.learnt}}/{{set.total}} Cards Learnt | Current Grade <strong>{{set.predicted_grade}}</strong> | Exam Date <strong>{{set.examdate}}</strong></h3>
       </div>
     </div>
     <div class="progress">
       <!--Green progress bar min width prevents it from getting too small if percentage is 0-->
-      <div class="progress-bar progress-bar-success" style="width: {{percentage}}% min-width: 2em;">
+      <div class="progress-bar progress-bar-success" style="width: {{percentage}}%; min-width: 2em;">
         {{percentage}}%
       </div>
     </div>
@@ -68,7 +72,7 @@
             <div class="half" id=bottom>
               <section id="section1" ng-show="section1">
                 <center>{{card.back}}</center>
-                <div style="font-size:20px;" align="right">Leant: <input type="checkbox" name="my-checkbox" ng-model="card.learnt" ng-click="changelearnt(card)"></div>
+                <div style="font-size:20px;" align="right">Learnt: <input type="checkbox" name="my-checkbox" ng-model="card.learnt" ng-click="changelearnt(card)"></div>
               </section>
             </div>
           </div>
