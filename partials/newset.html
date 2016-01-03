@@ -50,6 +50,9 @@
               <div class="col-sm-6">
                 <input type="text" name="settitle" ng-model="setdetails.name" id="title" class="form-control" placeholder="Enter set title">
               </div>
+              <div class="col-sm-4 errormessage">
+                <p>{{errormessages.title}}</p>
+              </div>
             </div>
             <div class="row">
               <label class="control-label col-sm-2"for="subject">Subject</label>
@@ -58,11 +61,17 @@
                   <option ng-model= "setdetails.subjectid" ng-repeat="subject in subjects" value={{subject.subjectid}}>{{subject.name}}</option>
                 </select>
               </div>
+              <div class="col-sm-4 errormessage">
+                <p>{{errormessages.subject}}</p>
+              </div>
             </div>
             <div class="row">
               <label  class="control-label col-sm-2" for="examdate">Exam Date</label>
               <div class="col-sm-3">
                 <input ng-model= "setdetails.examdate" type='date' class="form-control">
+              </div>
+              <div class="col-sm-5 errormessage">
+                <p>{{errormessages.examdate}}</p>
               </div>
             </div>
           </div>

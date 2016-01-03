@@ -100,8 +100,6 @@ var app = angular.module("app", ['ngRoute']).
           else{
             $scope.signupmessage.dob = ""
             var now = new Date();
-            console.log(signupdetails.dob)
-            console.log(now)
             if (signupdetails.dob > now) {
               valid = false;
               $scope.signupmessage.dob = "DoB must be in the past"
@@ -575,17 +573,60 @@ angular.module("app").controller("newsetCtrl",['$scope', '$routeParams', '$http'
 }
      });
 
+  var checkvalid = function(setdetails){
+    $scope.errormessages = {
+      title:"",
+      subject:"",
+      examdate:""
+    }
+
+    valid = true
+    if (setdetails === undefined) {
+      $scope.errormessages.title = "Enter title"
+      $scope.errormessages.subject = "Select subject"
+      $scope.errormessages.examdate = "Select exam date"
+      valid = false
+    }
+    else {
+
+      if (setdetails.name === "" || setdetails.name === undefined) {
+        $scope.errormessages.title = "Enter title"
+        valid = false
+      } else if (setdetails.name.length > 50) {
+        $scope.errormessages.title = "Title must be 50 charaters or less"
+        valid = false
+      }
+      if (setdetails.subject === undefined) {
+        $scope.errormessages.subject = "Select subject"
+        valid = false
+      }
+      if (setdetails.examdate === undefined) {
+        $scope.errormessages.examdate = "Select exam date"
+      }
+      var now = new Date();
+      now.setHours(0,0,0,0)
+      if (setdetails.examdate < now) {
+        $scope.errormessages.examdate = "Exam date must be in the future or today"
+        valid = false
+      }
+    }
+    return valid
+  }
+
 
   $scope.addcards = function(setdetails){
-    //format date into YYYY-MM-DD as required for db
-    formatteddate = setdetails.examdate.getFullYear()+"-"+setdetails.examdate.getMonth()+"-"+setdetails.examdate.getDate()
-    //url of dbquery api to create new set
-    url = "http://localhost:5000/createset/subjectid="+setdetails.subject+"/name="+setdetails.name+"/examdate="+formatteddate
-    $http.get(url)
-     .then(function(response) {
-       //open edit set with new set: response.data = setid of new set
-       window.open("/#/editset/"+userid+"/"+setdetails.subject+"/"+response.data, "_self");
-      });
+    console.log(setdetails)
+    if (checkvalid(setdetails)){
+      //format date into YYYY-MM-DD as required for db
+      formatteddate = setdetails.examdate.getFullYear()+"-"+(setdetails.examdate.getMonth()+1)+"-"+setdetails.examdate.getDate()
+      //url of dbquery api to create new set
+      url = "http://localhost:5000/createset/subjectid="+setdetails.subject+"/name="+setdetails.name+"/examdate="+formatteddate
+      $http.get(url)
+       .then(function(response) {
+         //open edit set with new set: response.data = setid of new set
+         window.open("/#/editset/"+userid+"/"+setdetails.subject+"/"+response.data, "_self");
+        });
+      };
     };
 }]);
 
@@ -647,38 +688,66 @@ angular.module("app").controller("editsetCtrl",['$scope', '$routeParams', '$http
         });
     });
 
+    $scope.removered = function(sideid){
+      $("#"+sideid).removeClass("side-error");
+    }
+
+    var checkvalid = function(carddetails) {
+      var valid = true
+      //add or remove red glow based on whether there is an error or not
+      if (carddetails.front === "") {
+        $("#flashcardfront").addClass("side-error");
+        valid = false
+      } else {
+        $("#flashcardfront").removeClass("side-error");
+      }
+      if (carddetails.back === "") {
+        $("#flashcardback").addClass("side-error");
+        valid = false
+      } else {
+        $("#flashcardback").removeClass("side-error");
+      }
+      return valid
+    }
+
     //function to be called when the next card button is pressed
     $scope.nextcard = function(carddetails) {
-      carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
-      //save current flashcard
-      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front.replace('/', '*slash*').replace("?","*qm*")+"/back="+carddetails.back.replace('/', '*slash*').replace("?","*qm*")+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
-      $http.get(url).then(function(response) {
-        //open next card in same tab
-        window.open("/#/editset/"+userid+"/"+subjectid+"/"+setid+"/"+$scope.cardsetdetails.nextid, "_self");
-      });
+      if (checkvalid(carddetails)) {
+        carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
+        //save current flashcard
+        var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front.replace('/', '*slash*').replace("?","*qm*")+"/back="+carddetails.back.replace('/', '*slash*').replace("?","*qm*")+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+        $http.get(url).then(function(response) {
+          //open next card in same tab
+          window.open("/#/editset/"+userid+"/"+subjectid+"/"+setid+"/"+$scope.cardsetdetails.nextid, "_self");
+        });
+      }
     }
 
     //function to be called when the previous card button is pressed
     $scope.previouscard = function(carddetails) {
-      carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
-      //save current card
-      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front.replace('/', '*slash*').replace("?","*qm*")+"/back="+carddetails.back.replace('/', '*slash*').replace("?","*qm*")+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
-      $http.get(url).then(function(response) {
-        //open previous card in same tab
-        window.open("/#/editset/"+userid+"/"+subjectid+"/"+setid+"/"+$scope.cardsetdetails.previd, "_self");
-      });
+      if (checkvalid(carddetails)) {
+        carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
+        //save current card
+        var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front.replace('/', '*slash*').replace("?","*qm*")+"/back="+carddetails.back.replace('/', '*slash*').replace("?","*qm*")+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+        $http.get(url).then(function(response) {
+          //open previous card in same tab
+          window.open("/#/editset/"+userid+"/"+subjectid+"/"+setid+"/"+$scope.cardsetdetails.previd, "_self");
+        });
+      };
     }
 
     //function to be called when save card button is pressed
     $scope.save = function(carddetails) {
-      carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
-      //save current card
-      var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front.replace('/', '*slash*').replace("?","*qm*")+"/back="+carddetails.back.replace('/', '*slash*').replace("?","*qm*")+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
+      if (checkvalid(carddetails)) {
+        carddetails.typeid = (parseInt(carddetails.cardtype) + 1).toString();
+        //save current card
+        var url = "http://localhost:5000/saveflashcard/setid="+carddetails.setid+"/flashcardid="+carddetails.flashcardid+"/typeid="+carddetails.typeid+"/front="+carddetails.front.replace('/', '*slash*').replace("?","*qm*")+"/back="+carddetails.back.replace('/', '*slash*').replace("?","*qm*")+"/grade="+carddetails.grade+"/learnt="+carddetails.learnt
 
-      $http.get(url).then(function(response) {
-        //open set page
-        window.open("/#/start/"+userid, "_self");
-      });
+        $http.get(url).then(function(response) {
+          //open set page
+          window.open("/#/start/"+userid, "_self");
+        });
+      };
     }
 
     //function to be called when auto define button is pressed
@@ -987,15 +1056,32 @@ angular.module("app").controller("subjectsCtrl",['$scope', '$routeParams', '$htt
         "images/subjects/Veterinary.png",
       ];
 
+      var checkvalid = function(subjectname){
+        $scope.errormessages = {name:""}
+        var valid = true
+        if (subjectname === ""){
+          $scope.errormessages.name = "Enter Name"
+          valid = false
+        }
+        else if (subjectname.length > 50){
+          $scope.errormessages.name = "Must be 50 characters or less"
+          valid = false
+        }
+        return valid
+      }
+
       $scope.createSubject = function(subjectdetails) {
-        //remove path from image name
-        subjectdetails.image = subjectdetails.image.replace("images/subjects/","")
-        //db query url for create subject url
-        var url = "http://localhost:5000/createsubject/userid="+userid+"/name="+subjectdetails.name+"/image="+subjectdetails.image+"/"
-        $http.get(url).then(function(response) {
-          // on success reload the page to display added set
-           window.location.reload()
-         });
+        if (checkvalid(subjectdetails.name)) {
+          $('#newSubjectl').modal('hide');
+          //remove path from image name
+          subjectdetails.image = subjectdetails.image.replace("images/subjects/","")
+          //db query url for create subject url
+          var url = "http://localhost:5000/createsubject/userid="+userid+"/name="+subjectdetails.name+"/image="+subjectdetails.image+"/"
+          $http.get(url).then(function(response) {
+            // on success reload the page to display added set
+             window.location.reload()
+           });
+       };
       };
     }]);
 

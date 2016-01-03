@@ -90,6 +90,9 @@
                   <div class="col-sm-9">
                     <input type="text" name="subjectname" ng-model="subjectdetails.name" id="name" class="form-control" placeholder="Enter subject name">
                   </div>
+                  <div class="col-sm-offset-3 col-sm-9">
+                    <h5 class="errormessage">{{errormessages.name}}</h5>
+                  </div>
                 </div>
                 <div class = "col-sm-8">
                   <label class="control-label col-sm-1"for="subject">Icon</label>
@@ -103,7 +106,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" ng-click="createSubject(subjectdetails)" data-dismiss="modal">Save</button>
+              <button type="button" class="btn btn-primary" ng-click="createSubject(subjectdetails)">Save</button>
             </div>
           </div>
         </div>

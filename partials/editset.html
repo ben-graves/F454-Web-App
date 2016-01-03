@@ -71,7 +71,7 @@
         <h3>Content</h3>
         <div class="form-group col-sm-5">
           <label for="flashcardfront">Front</label>
-          <textarea id = "flashcardfront"  class="flashcardinput form-control" rows="5" cols = "20" wrap="hard" ng-model="carddetails.front"></textarea>
+          <textarea id = "flashcardfront"  class="flashcardinput form-control" rows="5" cols = "20" wrap="hard" ng-model="carddetails.front" ng-click="removered('flashcardfront')"></textarea>
         </div>
         <div class = "col-sm-2">
           <center>
@@ -82,7 +82,7 @@
         </div>
         <div class="form-group col-sm-5">
           <label for="flashcardback">Back</label>
-          <textarea  id = "flashcardback" class="flashcardinput form-control" rows="5" ng-model="carddetails.back"></textarea>
+          <textarea  id = "flashcardback" class="flashcardinput form-control" rows="5" ng-model="carddetails.back" ng-click="removered('flashcardback')"></textarea>
         </div>
       </form>
     </div>

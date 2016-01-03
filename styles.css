@@ -535,6 +535,10 @@ label{
   font-size: 4vh;
 }
 
+.side-error{
+  box-shadow : 0 0 20px red;
+}
+
 
 a {
   color: grey;
